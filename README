@@ -1,0 +1,321 @@
+                              Perfitys plugin
+
+The author has started writing the Perfitys plugin to fulfill his personal
+needs as a Vim user without cluttering his vimrc file with autocommands and
+other settings. The plugin applies per file type settings and offers some
+automatic typing fonctionalities.
+
+The default behaviour of the plugin may not be suitable to every Vim users but
+the plugin is extremely customizable and every default setting can be
+overwritten by assigning specific variables in the vimrc file.
+
+This plugin is a work in (slow) progress and new features may be added and
+existing default settings modified.
+
+The file type support is far from complete. Only a few file types are
+supported. But support for other file types can easily be added.
+
+1. Installation
+2. Supported file types
+3. Disabling the plugin
+4. Per file type settings
+        4.1. Text width
+        4.2. Tab preferences
+5. Automatic typing
+        5.1. Primary separator
+        5.1. Secondary separator
+6. Credits and licensing
+
+==============================================================================
+1. Installation
+
+The Perfitys plugin comes with the following directory tree:
+
+perfitys
+        autoload
+        doc
+        ftplugin
+        plugin
+
+If you use Pathogen (a popular Vim plugin to manage Vim plugins), you just
+have to place the whole tree in your bundle directory (on a Linux system, it
+is probably ~/.vim/bundle). If you have Git installed and an internet access,
+just issue this command in a terminal after moving to your bundle directory:
+
+git clone git://github.com/thierr26/perfitys.git
+
+Make sure that Pathogen and the filetype plugins are enabled in your vimrc
+file with the following commands:
+
+        call pathogen#infect()
+        call pathogen#helptags()
+        filetype plugin indent on
+
+
+The author hasn't tested the other popular Vim plugin managers, but it should
+be possible to do the installation in a similar way when using those plugins.
+
+If you don't use a plugin manager, you have to manually copy the files. For
+example, on a Linux system, the files in perfitys/autoload must be copied to
+~/.vim/autoload. The files in perfitys/doc must be copied to ~/.vim/doc,
+etc...
+
+Whatever the way you have installed Perfitys, you have to make sure you have
+enabled the filetype plugins in your vimrc file with the
+"filetype plugin indent on" command.
+
+==============================================================================
+2. Supported file types
+
+Currently, the following file types are supported:
+
+ada
+c
+help
+sh
+text
+vim
+
+==============================================================================
+3. Disabling the plugin                                 *perfitys-disabling$
+
+                                        *loaded_perfitys*
+You can completely disable the Perfitys plugin without uninstalling it by
+adding this line to your vimrc file:
+
+        let g:loaded_perfitys = 1
+
+
+
+
+The file type specific scripts of Perfitys are not run if another filetype
+plugin has already set the variable b:did_ftplugin.
+
+If they are run, the Perfitys file type specific scripts set the variable
+b:did_ftplugin, which causes other filetype plugins to be disabled. You can
+prevent Perfitys from setting b:did_ftplugin by adding the following line to
+your vimrc file:
+
+        let g:perfitys_do_not_set_did_ftplugin = 1
+
+
+If you want to prevent Perfitys from setting b:did_ftplugin for a specific
+file type only (say the "sh" file type), add the following line to your vimrc
+file:
+
+        let g:perfitys_ada_do_not_set_did_ftplugin = 1
+
+
+==============================================================================
+4. Per file type settings
+
+4.1. Text width
+
+
+The 'textwidth' option is set by Perfitys depending on the file type. The
+default settings are as follows:
+
+| File type       | 'textwidth' option value |
+|---------------- + -------------------------|
+| ada, c, sh, vim | 79                       |
+| help, text      | 78                       |
+
+The default settings can be overwritten by setting global variables in your
+vimrc file. For example, if you want a text width of 80 for the sh file type,
+add the following line to your vimrc file:
+
+        let g:perfitys_sh_textwidth = 80
+
+
+
+
+If you don't want a per file type text width, but a common text width (say 80)
+for all the supported file types, add the following line to your vimrc file:
+>
+        let g:perfitys_common_textwidth = 80
+
+
+
+
+Perfitys also changes the 'colorcolumn' option. By default, it adds a value
+which is the textwidth value plus two. If you prefer to highlight the column
+next to text width, add the following line to your vimrc file:
+
+        let g:perfitys_colorcolumn_relative_to_width = 1
+
+
+
+
+If you don't want Perfitys to affect the 'colorcolumn' option at all, add the
+following line to your vimrc file:
+
+        let g:perfitys_do_not_set_colorcolumn = 1
+
+
+----------------------------------------------
+4.2. Tab preferences
+
+
+The 'tabstop', 'shiftwidth' and 'softtabstop' are set by Perfitys depending on
+the file type. The default settings are as follows:
+
+| File type  | 'tabstop', 'shiftwidth' and 'softtabstop' options value |
+|----------- + --------------------------------------------------------|
+| ada        | 3                                                       |
+| c, sh, vim | 4                                                       |
+| help, text | 8                                                       |
+
+The default settings can be overwritten by setting global variables to your
+vimrc file. For example, if you want a tab width of 8 for the sh file type,
+add the following line to your vimrc file:
+
+        let g:perfitys_sh_tabstop = 8
+
+
+
+
+If you don't want a per file type tab width, but a common tab width (say 8)
+for all the supported file types, add the following line to your vimrc file:
+
+        let g:perfitys_common_tabstop = 8
+
+
+
+By default, the 'expandtab' option is set to expandtab for all the supported
+file types. If for a particular file type (say sh) you want the 'expandtab'
+option set to noexpandtab, add the following line to your vimrc file:
+
+        let g:perfitys_sh_expandtab = "noexpandtab"
+
+
+Actually, the allowed values for such variables are "expandtab",
+"noexpandtab", "et" and "noet", similarly to the 'expandtab' option.
+
+
+
+If you want the 'expandtab' option to be set to noexpandtab for all the
+supported file types, add the following line to your vimrc file:
+
+        let g:perfitys_common_expandtab = "noexpandtab"
+
+
+==============================================================================
+5. Automatic typing
+
+
+5.1. Primary separator
+
+Perfitys provides a function for inserting a separator line in the current
+buffer. Well actually two functions, because the author has encountered the
+need for two different kinds of separator lines in the same file.
+
+Both kinds of separator lines are comment lines if the file type is of a
+programming language supported by Perfitys.
+
+One kind is said "primary separator", the other kind is said "secondary
+separator".
+
+
+
+A primary separator line can be inserted using the :Sep or :PrimSep commands,
+or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: <Leader>SS
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysPrimSep
+
+
+The exact look of a separator line depends on the file type, but you can force
+you look you want by assigning specific dictionary variables in your vimrc
+file.
+
+For example, the following statement in your vimrc file will cause the
+primary separator lines to contain "+-" sequences and to be 79 characters long
+and to be surrounded by one empty line when the file type is "sh":
+
+        let g:perfitys_sh_prim_sep = {
+                    \ 'indent_level': 0,
+                    \ 'post_comment_leader_space': " ",
+                    \ 'repeating_sequence': "+-",
+                    \ 'length': 79,
+                    \ 'pre_comment_trailer_space': " ",
+                    \ 'empty_lines_above': 1,
+                    \ 'empty_lines_below': 1,
+                    \ }
+
+
+
+
+You can force the same look for primary separators in all the file types by
+assigning a similar dictionary to g:perfitys_common_prim_sep in your vimrc
+file:
+
+        let g:perfitys_common_prim_sep = {
+                    \ 'indent_level': 0,
+                    \ 'post_comment_leader_space': " ",
+                    \ 'repeating_sequence': "+-",
+                    \ 'length': 79,
+                    \ 'pre_comment_trailer_space': " ",
+                    \ 'empty_lines_above': 1,
+                    \ 'empty_lines_below': 1,
+                    \ }
+
+
+----------------------------------------------
+5.2. Secondary separator
+
+Secondary separator lines are similar to primary separator lines, but they can
+have there own look.
+
+A secondary separator line can be inserted using the :SecondSep command, or
+using the Plugin | Perfitys menu.
+
+The key mapping is: <Leader>S
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysSecondSep
+
+
+
+
+You can force the look for secondary separators the same way you can for a
+primary separator, by assigning specific dictionary variables in your vimrc
+file:
+
+        let g:perfitys_sh_second_sep = {
+                    \ 'indent_level': 2,
+                    \ 'post_comment_leader_space': " ",
+                    \ 'repeating_sequence': "+-",
+                    \ 'length': 59,
+                    \ 'pre_comment_trailer_space': " ",
+                    \ 'empty_lines_above': 1,
+                    \ 'empty_lines_below': 1,
+                    \ }
+
+
+to apply the look to files of type "sh" only, or
+
+        let g:perfitys_common_prim_sep = {
+                    \ 'indent_level': 2,
+                    \ 'post_comment_leader_space': " ",
+                    \ 'repeating_sequence': "+-",
+                    \ 'length': 59,
+                    \ 'pre_comment_trailer_space': " ",
+                    \ 'empty_lines_above': 1,
+                    \ 'empty_lines_below': 1,
+                    \ }
+
+
+to apply the look to all file types.
+
+==============================================================================
+6. Credits and licensing
+
+Author: Thierry Rascle (thierr26@free.fr)
+
+Licensed under the Unlicense license (see http://unlicense.org).
