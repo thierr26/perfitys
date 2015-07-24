@@ -634,9 +634,9 @@ let g:{s:script}_enabled = 1
 
 " Define maps, commands and menus.
 call s:DefineMapCommandAndMenu("PrimSep", "<Leader>SS",
-            \ "Insert Primary Separator Line")
+            \ "Insert Primary Separator Line")
 call s:DefineMapCommandAndMenu("SecondSep", "<Leader>S",
-            \ "Insert Secondary Separator Line")
+            \ "Insert Secondary Separator Line")
 call s:DefineCommandForAutoloadFunc("PrimSep", "Sep")
 
 " Restore the value of cpoptions.
