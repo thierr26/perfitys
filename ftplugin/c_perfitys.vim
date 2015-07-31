@@ -10,7 +10,8 @@ let s:script = tolower(fnamemodify(expand('<sfile>:p'), ':t:r'))
 
 " Check the resulting name.
 if s:script !~# '^[a-z][a-z0-9]*_[a-z0-9]\+$'
-    throw '<sfile>:p' . " is not a suitable file name for the filetype plugin"
+    throw expand('<sfile>:p')
+                \ . " is not a suitable file name for the filetype plugin"
 endif
 
 " Compute the name of the main script of the plugin (plugin/perfitys.vim).
