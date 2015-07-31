@@ -2,7 +2,7 @@
                                                                 *perfitys*
                               Perfitys plugin
 
-The author has started writing the Perfitys plugin to fulfill his personal
+The author has started writing the Perfitys Vim plugin to fulfill his personal
 needs as a Vim user without cluttering his |vimrc| file with autocommands and
 other settings. The plugin applies per file type settings and offers some
 automatic typing fonctionalities.
@@ -79,7 +79,7 @@ text
 vim
 
 ==============================================================================
-3. Disabling the plugin                                 *perfitys-disabling$
+3. Disabling the plugin                                 *perfitys-disabling*
 
                                         *loaded_perfitys* *g:loaded_perfitys*
 You can completely disable the Perfitys plugin without uninstalling it by

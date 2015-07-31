@@ -70,15 +70,15 @@ endfunction
 " -----------------------------------------------------------------------------
 
 " Checks that the argument is a dictionary containing a valid comment leader
-" and a valid comment trailer.
+" and a valid comment trailer. See in file ftplugin/c_perfitys.vim the
+" statement:
+" call {s:plugin}SetLocal("comment", ...
+" for an example of such a dictionary.
 "
 " Arguments:
 "
-" #1 - sep
-" Comment leader and trailer as a dictionary. See in file
-" ftplugin/c_perfitys.vim the statement
-" call {s:plugin}SetLocal("comment", ...
-" for an example of such a dictionary.
+" #1 - d
+" Anything.
 "
 " Return value:
 " Non-zero if d is a dictionary containing a valid comment leader and a valid
@@ -108,15 +108,14 @@ endfunction
 " -----------------------------------------------------------------------------
 
 " Checks that the argument is a dictionary containing valid parameters for a
-" separator line.
+" separator line. See in file ftplugin/text_perfitys.vim the statement:
+" call {s:plugin}SetLocal("second_sep", ...
+" for an example of such a dictionary.
 "
 " Arguments:
 "
 " #1 - d
-" Separator line parameters as a dictionary. See in file
-" ftplugin/text_perfitys.vim the statement
-" call {s:plugin}SetLocal("second_sep", ...
-" for an example of such a dictionary.
+" Anything.
 "
 " Return value:
 " Non-zero if d is a dictionary containing valid parameters for a separator
