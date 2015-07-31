@@ -297,7 +297,7 @@ function {s:plugin}Get(ident, ...)
 
     let l:filetype_given = a:0 == 3
     let l:default_value = l:filetype_given ? a:2 : a:1
-    let IsValid = l:filetype_given ? a:3 : a:2
+    let l:IsValid = l:filetype_given ? a:3 : a:2
 
     if l:filetype_given
 
@@ -321,7 +321,7 @@ function {s:plugin}Get(ident, ...)
 
     endif
 
-    if !IsValid(l:ret)
+    if !l:IsValid(l:ret)
         throw "Invalid custom " . a:ident . " parameter for " . s:plugin
                     \ .  " plugin"
     endif
