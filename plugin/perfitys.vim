@@ -528,7 +528,8 @@ function s:DefineMapToAutoloadFunc(func, map)
     endif
 
     if !hasmapto('<Plug>' . s:plugin . a:func)
-        execute "map <unique> " . a:map . " <Plug>" . s:plugin . a:func
+        execute "map <silent> <unique> " . a:map .
+                    \ " <Plug>" . s:plugin . a:func
     endif
     execute "noremap <unique> <script> <Plug>" . s:plugin . a:func . " <SID>"
                 \ . a:func
