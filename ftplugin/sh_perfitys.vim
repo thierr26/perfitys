@@ -50,16 +50,6 @@ call {s:plugin}SetTabPreferences(4, "expandtab")
 
 call {s:plugin}SetLocal("comment", {'leader': "#", 'trailer': ""})
 
-call {s:plugin}SetLocal("prim_sep", {
-            \ 'indent_level': 0,
-            \ 'post_comment_leader_space': "",
-            \ 'repeating_sequence': "*",
-            \ 'length': &textwidth,
-            \ 'pre_comment_trailer_space': " ",
-            \ 'empty_lines_above': 1,
-            \ 'empty_lines_below': 0,
-            \ })
-
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
