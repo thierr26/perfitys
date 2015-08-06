@@ -385,7 +385,7 @@ function s:PutLineAndCollapse(s, reg_exp)
         let l:cur_line = getline('.')
         while line('.') == l:line_num + 1 && (l:cur_line =~# a:reg_exp
                     \ || l:cur_line =~# '\m^\s*$')
-            normal! dd
+            normal! "_dd
             let l:cur_line = getline('.')
         endwhile
         normal! k
@@ -396,7 +396,7 @@ function s:PutLineAndCollapse(s, reg_exp)
         let l:cur_line = getline('.')
         while line('.') == l:line_num - 1  && l:line_num > 1
                     \ && (l:cur_line =~# a:reg_exp || l:cur_line =~# '\m^\s*$')
-            normal! dd
+            normal! "_dd
             let l:line_num -= 1
             normal! k
             let l:cur_line = getline('.')
