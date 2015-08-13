@@ -72,9 +72,12 @@ Currently, the following file types are supported:
 ada
 c
 conf
+css
 gitcommit
 haskell
 help
+html
+php
 sh
 text
 vim
@@ -118,12 +121,12 @@ file:
 The 'textwidth' option is set by Perfitys depending on the file type. The
 default settings are as follows:
 
-| File type                      | 'textwidth' option value |
-|--------------------------------+--------------------------|
-| ada, c, conf, haskell, sh, vim | 79                       |
-| gitcommit                      | 72                       |
-| help, text                     | 78                       |
-| xdefaults                      | 79                       |
+| File type                        | 'textwidth' option value |
+|----------------------------------+--------------------------|
+| ada, c, conf, css, haskell, html | 79                       |
+| gitcommit                        | 72                       |
+| help, text                       | 78                       |
+| php, sh, vim, xdefaults          | 79                       |
 
 The default settings can be overwritten by setting global variables in your
 vimrc file. For example, if you want a text width of 80 for the sh file type,
@@ -164,15 +167,15 @@ following line to your vimrc file:
 The 'tabstop', 'shiftwidth' and 'softtabstop' are set by Perfitys depending on
 the file type. The default settings are as follows:
 
-| File type  | 'tabstop', 'shiftwidth' and 'softtabstop' options value |
-|------------+---------------------------------------------------------|
-| ada        | 3                                                       |
-| c, conf    | 4                                                       |
-| gitcommit  | 4                                                       |
-| haskell    | 4                                                       |
-| sh, vim    | 4                                                       |
-| help, text | 8                                                       |
-| xdefaults  | 4                                                       |
+| File type     | 'tabstop', 'shiftwidth' and 'softtabstop' options value |
+|---------------+---------------------------------------------------------|
+| ada           | 3                                                       |
+| c, conf, css  | 4                                                       |
+| gitcommit     | 4                                                       |
+| haskell, html | 4                                                       |
+| php, sh, vim  | 4                                                       |
+| help, text    | 8                                                       |
+| xdefaults     | 4                                                       |
 
 The default settings can be overwritten by setting global variables to your
 vimrc file. For example, if you want a tab width of 8 for the sh file type,
