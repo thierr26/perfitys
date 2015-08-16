@@ -23,6 +23,7 @@ supported. But support for other file types can easily be added.
 4. Per file type settings       |perfitys-per-file-type-settings|
         4.1. Text width                 |perfitys-textwidth|
         4.2. Tab preferences            |perfitys-tab|
+        4.3. Alternative file type      |perfitys-alt-filetype|
 5. Automatic typing             |perfitys-automatic-typing|
         5.1. Primary separator          |perfitys-primary-separator|
         5.1. Secondary separator        |perfitys-secondary-separator|
@@ -213,6 +214,45 @@ supported file types, add the following line to your |vimrc| file: >
 
         let g:perfitys_common_expandtab = "noexpandtab"
 <
+
+----------------------------------------------
+4.3. Alternative file type                      *perfitys-alt-filetype*
+
+                                                                *:AltFileType*
+Perfitys provides a function to change the 'filetype' option for a buffer
+(only if the 'filetype' option has been set). This function can be operated
+using the :AltFileType command, or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: <Leader>FT
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your |vimrc| file: >
+
+        map <Leader>ZZ <Plug>PerfitysAltFileType
+<
+
+With the default setting, the functions changes the 'filetype' option if the
+'filetype' option is set to "help", "text", "php" or "html". If the 'filetype'
+option has an other value, the function does not change it.
+
+| When 'filetype' is set to | :AltFileType changes it to |
+|-------------------------- + ---------------------------|
+| help                      | text                       |
+| text                      | help                       |
+| html                      | php                        |
+| php                       | html                       |
+
+                                                *g:perfitys_alt_filetype*
+You can redefine the behaviour of the function by adding a line like the
+following in your |vimrc| file: >
+
+let g:perfitys_alt_filetype = {'help': "text", 'php': "html"}
+<
+
+g:perfitys_alt_filetype is a dictionary variable defining pairs of filetype
+values. If the 'filetype' option is in one of the pairs, then the function
+changes the 'filetype' value to the other value of the pair. You can add all
+the pairs you need.
 
 ==============================================================================
 5. Automatic typing                             *perfitys-automatic-typing*

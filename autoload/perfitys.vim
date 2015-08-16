@@ -156,6 +156,20 @@ function s:IsSepDict(d)
     endif
     return l:ret
 endfunction
+" -----------------------------------------------------------------------------
+
+" Checks that the argument is a dictionary.
+"
+" Arguments:
+"
+" #1 - d
+" Anything.
+"
+" Return value:
+" Non-zero if d is a dictionary, zero otherwise.
+function s:IsDict(d)
+    return type(a:d) == type({})
+endfunction
 
 " -----------------------------------------------------------------------------
 
@@ -468,6 +482,175 @@ function s:PutAbove(s, ...)
         normal! j
     endfor
 
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Returns the first key found in the non empty dictionary given as argument.
+"
+" Arguments:
+"
+" #1 - d
+" Non empty dictionary.
+"
+" Return value:
+" First key found in the dictionary given as argument.
+function s:FirstDictKey(d)
+
+    " Check the argument.
+    if type(a:d) != type({})
+        throw "Dictionary expected"
+    elseif empty(a:d)
+        throw "Argument must be a non-empty directory"
+    endif
+
+    for [key, value] in items(a:d)
+        let l:ret = key
+        break
+    endfor
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Returns the first value found in the non empty dictionary given as argument.
+"
+" Arguments:
+"
+" #1 - d
+" Non empty dictionary, with values of type string.
+"
+" Return value:
+" First value found in the dictionary given as argument.
+function s:FirstDictVal(d)
+
+    " Check the argument.
+    if type(a:d) != type({})
+        throw "Dictionary expected"
+    elseif empty(a:d)
+        throw "Argument must be a non-empty dictionary"
+    endif
+
+    for [key, value] in items(a:d)
+        if type(value) != type("")
+            throw "Values must be of type string"
+        endif
+        let l:ret = value
+        break
+    endfor
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" If the dictionnary given as first argument has a key matching the file type
+" given as second argument, then the function returns the associated value if
+" it is not empty. If it is empty, an exception is thrown.
+"
+" If the dictionnary given as first argument has no key matching the file type
+" given as second argument, then the function looks for a value matching the
+" filetype and returns the associated key if such a value is found.
+"
+" Arguments:
+"
+" #1 - d
+" Dictionary.
+"
+" #2 - filetype
+" Non empty string.
+"
+" Return value:
+" String, might be empty.
+function s:FindAltFileType(d, filetype)
+
+    " Check the arguments.
+    if type(a:d) != type({}) || type(a:filetype) != type("")
+        throw "Wrong type for at least one argument"
+    elseif a:filetype == ""
+        throw "File type argument must not be an empty string"
+    endif
+
+    let l:d_shallow_copy_1 = copy(a:d)
+    call filter(l:d_shallow_copy_1, 'v:key ==# a:filetype')
+    if !empty(l:d_shallow_copy_1)
+        let l:ret = s:FirstDictVal(l:d_shallow_copy_1)
+    else
+        let l:d_shallow_copy_2 = copy(a:d)
+        call filter(l:d_shallow_copy_2, 'v:val ==# a:filetype')
+        if !empty(l:d_shallow_copy_2)
+            let l:ret = s:FirstDictKey(l:d_shallow_copy_2)
+        else
+            let l:ret = ""
+        endif
+    endif
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Returns the return value of function FindAltFileType unless:
+" - its return value is empty (in this case returns the second argument as is),
+" - another call of FindAltFileType with the second argument substituted with
+"   the return value of the first call does not return the second argument (in
+"   this case throws an exception).
+"
+" Arguments:
+"
+" #1 - d
+" Dictionary.
+"
+" #2 - filetype
+" Non empty string.
+"
+" Return value:
+" Non empty string.
+function s:CheckedAltFileType(d, filetype)
+
+    " Check the argument.
+    if type(a:d) != type({}) || type(a:filetype) != type("")
+        throw "Wrong type for at least one argument"
+    elseif a:filetype == ""
+        throw "File type argument must not be an empty string"
+    endif
+
+    let l:ret = s:FindAltFileType(a:d, a:filetype)
+    if empty(l:ret)
+        let l:ret = a:filetype
+    elseif s:FindAltFileType(a:d, l:ret) !=# a:filetype
+        throw "Invalid file type dictionary"
+    endif
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Changes filetype to the alternative file type.
+"
+" Return value:
+" 0
+function {s:script}#AltFileType()
+
+    if &filetype != ""
+        let l:alt_filetype_dict = {s:plugin}Get("alt_filetype", {
+                    \ 'help': "text",
+                    \ 'php': "html"
+                    \ }, function("s:IsDict"))
+        let l:original_filetype = &filetype
+        let &filetype = s:CheckedAltFileType(l:alt_filetype_dict,
+                    \ l:original_filetype)
+        if &filetype ==# l:original_filetype
+            let l:unchged = " (unchanged)"
+        else
+            let l:unchged = ""
+        endif
+        echomsg "Option filetype is now set to " . &filetype . l:unchged . "."
+    else
+        echohl WarningMsg | echo "No file type detected" | echohl None
+    endif
 endfunction
 
 " -----------------------------------------------------------------------------
