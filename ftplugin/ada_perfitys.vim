@@ -49,7 +49,9 @@ set cpo&vim
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(3, "expandtab")
 
-call {s:plugin}SetLocal("comment", {'leader': "--", 'trailer': ""})
+let s:comment_leader = "--"
+call {s:plugin}SetLocal("comment", {'leader': s:comment_leader, 'trailer': ""})
+let &comments = &comments . ",b:" . s:comment_leader
 
 call {s:plugin}SetLocal("prim_sep", {
             \ 'indent_level': 1,
