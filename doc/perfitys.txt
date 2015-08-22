@@ -26,7 +26,7 @@ supported. But support for other file types can easily be added.
         4.3. Alternative file type      |perfitys-alt-filetype|
 5. Automatic typing             |perfitys-automatic-typing|
         5.1. Primary separator          |perfitys-primary-separator|
-        5.1. Secondary separator        |perfitys-secondary-separator|
+        5.2. Secondary separator        |perfitys-secondary-separator|
 6. Credits and licensing        |perfitys-credits|
 
 ==============================================================================
