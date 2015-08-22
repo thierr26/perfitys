@@ -380,6 +380,36 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Sets the colorcolumn option to the value given as argument if the colorcolumn
+" option is empty, otherwise add the value given as argument if it is not
+" already in the colorcolumn option.
+"
+" Argument
+"
+" #1 - column
+" Integer value.
+"
+" Return value:
+" 0
+function {s:plugin}SetColorcolumn(column)
+
+    " Check the argument.
+    if !{s:plugin}IsInteger(a:column)
+        throw "Argument must be an integer"
+    endif
+
+    if &colorcolumn == ""
+        let &colorcolumn = a:column
+    elseif &colorcolumn !~# ("^" . a:column . "$")
+                \ && &colorcolumn !~# ("^" . a:column . ",")
+                \ && &colorcolumn !~# ("," . a:column . "$")
+        let &colorcolumn = &colorcolumn . "," . a:column
+    endif
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Sets the textwidth option for a specific file type to the value of the
 " "width" argument, unless a variable named for example like
 " "g:perfitys_sh_textwidth" exists (if &filetype is "sh") and is greater than
@@ -389,12 +419,12 @@ endfunction
 " supersedes the values of both the argument and the file type specific
 " variable.
 "
-" Additionally, sets the colorcolumn option. The value is the sum of the
-" "width" and "colorcolumn_relative_to_width" arguments. If a variable named
-" "g:perfitys_colorcolumn_relative_to_width" exists, then the value of this
-" variable is used instead. Finally, if the global variable
-" "g:perfitys_do_not_set_colorcolumn" exists and is non-zero, then the
-" colorcolumn option is not affected.
+" Additionally, sets the colorcolumn option if the textwidth is greater than 0.
+" The value is the sum of the "width" and "colorcolumn_relative_to_width"
+" arguments. If a variable named "g:perfitys_colorcolumn_relative_to_width"
+" exists, then the value of this variable is used instead. Finally, if the
+" global variable "g:perfitys_do_not_set_colorcolumn" exists and is non-zero,
+" then the colorcolumn option is not affected.
 "
 " Arguments:
 "
@@ -418,14 +448,9 @@ function {s:plugin}SetTextWidth(width, colorcolumn_relative_to_width)
     let &textwidth = {s:plugin}Get("textwidth", &filetype, a:width,
                 \ function(s:plugin . "IsNatural"))
 
-    if !{s:plugin}GlobalFlag("do_not_set_colorcolumn")
-        if strlen(&colorcolumn) == 0
-            let l:sep = ""
-        else
-            let l:sep = ","
-        endif
-        let &colorcolumn .= l:sep . (&textwidth
-                    \+ {s:plugin}Get("colorcolumn_relative_to_width",
+    if &textwidth > 0 && !{s:plugin}GlobalFlag("do_not_set_colorcolumn")
+        call {s:plugin}SetColorcolumn(&textwidth
+                    \ + {s:plugin}Get("colorcolumn_relative_to_width",
                     \ a:colorcolumn_relative_to_width,
                     \ function(s:plugin . "IsInteger")))
     endif

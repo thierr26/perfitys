@@ -156,6 +156,9 @@ column next to text width, add the following line to your |vimrc| file: >
         let g:perfitys_colorcolumn_relative_to_width = 1
 <
 
+Note that if the text width has been set to 0, then the 'colorcolumn' option
+is not affected.
+
                                         *perfitys_do_not_set_colorcolumn*
                                         *g:perfitys_do_not_set_colorcolumn*
 If you don't want Perfitys to affect the 'colorcolumn' option at all, add the

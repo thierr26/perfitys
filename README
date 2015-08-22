@@ -154,6 +154,8 @@ next to text width, add the following line to your vimrc file:
 
 
 
+Note that if the text width has been set to 0, then the 'colorcolumn' option
+is not affected.
 
 If you don't want Perfitys to affect the 'colorcolumn' option at all, add the
 following line to your vimrc file:
