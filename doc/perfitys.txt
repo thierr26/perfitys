@@ -24,6 +24,8 @@ supported. But support for other file types can easily be added.
         4.1. Text width                 |perfitys-textwidth|
         4.2. Tab preferences            |perfitys-tab|
         4.3. Alternative file type      |perfitys-alt-filetype|
+        4.4. "End of line" comment      |perfitys-eol-comment|
+        4.5. Bullet-lists               |perfitys-bullet-lists|
 5. Automatic typing             |perfitys-automatic-typing|
         5.1. Primary separator          |perfitys-primary-separator|
         5.2. Secondary separator        |perfitys-secondary-separator|
@@ -256,6 +258,38 @@ g:perfitys_alt_filetype is a dictionary variable defining pairs of filetype
 values. If the 'filetype' option is in one of the pairs, then the function
 changes the 'filetype' value to the other value of the pair. You can add all
 the pairs you need.
+
+----------------------------------------------
+4.4. "End of line" comment                      *perfitys-eol-comment*
+
+The Vim default value for the 'comments' option seems to be:
+
+s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+
+For the file types which support "end of line" comments, Perfitys adds the
+associated comment leader to the 'comments' option (unless the comment leader
+is already in the 'comments' option.
+
+For exemple, for the ada file type, Perfitys changes the 'comments' option to:
+
+s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-,b:--
+
+(",b:--" has been appended to the 'comments' option).
+
+----------------------------------------------
+4.5. Bullet-lists                               *perfitys-bullet-lists*
+
+The Vim default value for the 'comments' option seems to be:
+
+s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+
+The "fb:-" means that "- " is considered to be a leader for a bullet-list
+item (see |format-comments|). And this is applied for all file types.
+
+The only action of Perfitys regarding bullet-lists is to set the 'comments'
+option to "://,b:#,:%,:XCOMM,n:>,fb:-,fb:*" for the gitcommit file type. This
+implies that for the gitcommit file type, both "- " and "* " are considered to
+be leaders for bullet-list items.
 
 ==============================================================================
 5. Automatic typing                             *perfitys-automatic-typing*

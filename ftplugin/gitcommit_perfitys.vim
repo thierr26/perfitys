@@ -49,6 +49,8 @@ set cpo&vim
 call {s:plugin}SetTextWidth(72, 2)
 call {s:plugin}SetTabPreferences(4, "expandtab")
 
+call {s:plugin}ConfigEndOfLineComment("*")
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 

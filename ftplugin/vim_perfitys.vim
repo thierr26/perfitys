@@ -49,9 +49,7 @@ set cpo&vim
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(4, "expandtab")
 
-let s:comment_leader = '"'
-call {s:plugin}SetLocal("comment", {'leader': s:comment_leader, 'trailer': ""})
-let &comments = &comments . ",b:" . s:comment_leader
+call {s:plugin}ConfigEndOfLineComment('"')
 
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo

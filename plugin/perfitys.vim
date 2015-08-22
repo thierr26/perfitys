@@ -507,6 +507,63 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Does the appropriate comment configurations for file types with comment of
+" type "end of line".
+"
+" This includes adding the comment leader to the comments option, with flag b.
+" For example, if the comment leader given as argument is "--", then "b:--"
+" will be added to the comments option.
+"
+" The values "*" and "-" for the argument are particular cases. They both cause
+" the comments option to be set to "://,b:#,:%,:XCOMM,n:>,fb:-,fb:-,fb:*" which
+" is suitable for the gitcommit file type.
+"
+" Argument:
+"
+" #1 - comment_leader
+" Comment leader.
+"
+" Return value:
+" 0
+function {s:plugin}ConfigEndOfLineComment(comment_leader)
+
+    " Check the argument.
+    if !{s:plugin}IsNonEmptyString(a:comment_leader)
+        throw "Argument must be a string"
+    endif
+
+    call {s:plugin}SetLocal("comment",
+                \ {'leader': a:comment_leader, 'trailer': ""})
+
+    let l:append_string = "b:" . a:comment_leader
+
+    if a:comment_leader == "*" || a:comment_leader == "-"
+        let &comments = "://,b:#,:%,:XCOMM,n:>,fb:-,fb:-,fb:*"
+    elseif &comments == ""
+        let &comments = l:append_string
+    else
+        let l:escape_list = '/*'
+        let l:escaped_comment_leader = escape(a:comment_leader, l:escape_list)
+        echo &comments !~# ("^[^,m]*:" . l:escaped_comment_leader . "$")
+        echo &comments !~# ("^[^,m]*:" . l:escaped_comment_leader . ",")
+        echo &comments !~# (",[^,m]*:" . l:escaped_comment_leader . "$")
+        echo &comments !~# (",[^,m]*:" . l:escaped_comment_leader . ",")
+        let l:cond1 = (&comments !~# ("^[^,m]*:" . l:escaped_comment_leader
+                    \ . "$"))
+        let l:cond2 = (&comments !~# ("^[^,m]*:" . l:escaped_comment_leader
+                    \ . ","))
+        let l:cond3 = (&comments !~# (",[^,m]*:" . l:escaped_comment_leader
+                    \ . "$"))
+        let l:cond4 = (&comments !~# (",[^,m]*:" . l:escaped_comment_leader
+                    \ . ","))
+        if l:cond1 && l:cond2 && l:cond3 && l:cond4
+            let &comments = &comments . "," . l:append_string
+        endif
+    endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Full name of a plugin related autoloaded function.
 "
 " Arguments:
