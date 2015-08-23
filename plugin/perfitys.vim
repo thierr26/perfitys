@@ -544,10 +544,6 @@ function {s:plugin}ConfigEndOfLineComment(comment_leader)
     else
         let l:escape_list = '/*'
         let l:escaped_comment_leader = escape(a:comment_leader, l:escape_list)
-        echo &comments !~# ("^[^,m]*:" . l:escaped_comment_leader . "$")
-        echo &comments !~# ("^[^,m]*:" . l:escaped_comment_leader . ",")
-        echo &comments !~# (",[^,m]*:" . l:escaped_comment_leader . "$")
-        echo &comments !~# (",[^,m]*:" . l:escaped_comment_leader . ",")
         let l:cond1 = (&comments !~# ("^[^,m]*:" . l:escaped_comment_leader
                     \ . "$"))
         let l:cond2 = (&comments !~# ("^[^,m]*:" . l:escaped_comment_leader
