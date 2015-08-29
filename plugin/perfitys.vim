@@ -144,7 +144,7 @@ endfunction
 " Non-zero if s is one of "expandtab", "et", "noexpandtab", or "noet".
 function {s:plugin}IsExpandTabValue(s)
     return type(a:s) == type("")
-                \ && a:s =~# '^\(no\)\?et$' || a:s =~# '^\(no\)\?expandtab$'
+                \ && (a:s =~# '^\(no\)\?et$' || a:s =~# '^\(no\)\?expandtab$')
 endfunction
 
 " -----------------------------------------------------------------------------
