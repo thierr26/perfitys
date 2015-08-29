@@ -156,6 +156,7 @@ function s:IsSepDict(d)
     endif
     return l:ret
 endfunction
+
 " -----------------------------------------------------------------------------
 
 " Checks that the argument is a dictionary.
