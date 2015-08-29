@@ -237,7 +237,7 @@ endfunction
 "
 " Return value:
 " 0
-function {s:script}#SecondSep(...)
+function {s:script}#SecondSep()
 
     let l:ident = "second_sep"
     let l:local_sep = s:GetLocal(l:ident, {
