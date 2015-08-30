@@ -21,6 +21,16 @@ let s:prefix = s:script . "_"
 " Compute the plugin name (with the first letter capitalized).
 let s:plugin = substitute(s:script, "^.", '\=toupper(submatch(0))', "")
 
+let s:prim_sep_default_dic = {
+            \ 'indent_level': 0,
+            \ 'post_comment_leader_space': " ",
+            \ 'repeating_sequence': "-",
+            \ 'length': &textwidth,
+            \ 'pre_comment_trailer_space': " ",
+            \ 'empty_lines_above': 1,
+            \ 'empty_lines_below': 1,
+            \}
+
 " -----------------------------------------------------------------------------
 
 " Returns the value of a buffer local plugin related parameter. The name of the
@@ -214,15 +224,8 @@ endfunction
 function {s:script}#PrimSep()
 
     let l:ident = "prim_sep"
-    let l:local_sep = s:GetLocal(l:ident, {
-                \ 'indent_level': 0,
-                \ 'post_comment_leader_space': " ",
-                \ 'repeating_sequence': "-",
-                \ 'length': &textwidth,
-                \ 'pre_comment_trailer_space': " ",
-                \ 'empty_lines_above': 1,
-                \ 'empty_lines_below': 1,
-                \ }, function("s:IsSepDict"))
+    let l:local_sep = s:GetLocal(l:ident, s:prim_sep_default_dic,
+                \ function("s:IsSepDict"))
 
     call s:PutSep({s:plugin}Get(l:ident, &filetype, l:local_sep,
                 \ function("s:IsSepDict")))
@@ -252,6 +255,23 @@ function {s:script}#SecondSep()
 
     call s:PutSep({s:plugin}Get(l:ident, &filetype, l:local_sep,
                 \ function("s:IsSepDict")))
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks that the string given as argument "looks like" a primary separator
+" line.
+"
+" Arguments
+"
+" #1 - s
+" Any string.
+"
+" Return value:
+" Non-zero if the string matches the regular expression returned by
+" s:SepRegExp(s:prim_sep_default_dic).
+function {s:script}#MatchesPrimSep(s)
+    return a:s =~# s:SepRegExp(s:prim_sep_default_dic)
 endfunction
 
 " -----------------------------------------------------------------------------

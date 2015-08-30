@@ -24,6 +24,7 @@ supported. But support for other file types can easily be added.
         4.3. Alternative file type
         4.4. "End of line" comment
         4.5. Bullet-lists
+        4.6. Folding method
 5. Automatic typing
         5.1. Primary separator
         5.2. Secondary separator
@@ -142,7 +143,7 @@ add the following line to your vimrc file:
 
 If you don't want a per file type text width, but a common text width (say 80)
 for all the supported file types, add the following line to your vimrc file:
->
+
         let g:perfitys_common_textwidth = 80
 
 
@@ -227,7 +228,7 @@ using the :AltFileType command, or using the Plugin | Perfitys menu.
 A key mapping is also defined: <Leader>FT
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your vimrc file:
 
         map <Leader>ZZ <Plug>PerfitysAltFileType
 
@@ -286,6 +287,41 @@ The only action of Perfitys regarding bullet-lists is to set the 'comments'
 option to "://,b:#,:%,:XCOMM,n:>,fb:-,fb:*" for the gitcommit file type. This
 implies that for the gitcommit file type, both "- " and "* " are considered to
 be leaders for bullet-list items.
+
+----------------------------------------------
+4.6. Folding method
+
+The 'foldmethod' option is set or not set by Perfitys, depending on the file
+type. The default settings are as follows:
+
+| File type        | 'foldmethod' option value             |
+|------------------+---------------------------------------|
+| sh               | expr                                  |
+| other file types | 'foldmethod' not affected by Perfitys |
+
+The default settings can be overwritten by setting global variables in your
+vimrc file. For example, if you want 'foldmethod' set to indent for the sh
+file type, add the following line to your vimrc file:
+
+        let g:perfitys_sh_foldmethod = "indent"
+
+
+For a file type for which Perfitys sets the 'foldmethod' option, if the value
+of the 'foldmethod' option is "expr", Perfitys sets the 'foldexpr' option to
+"PerfitysShFoldLevel(v:lnum)" if the function PerfitysShFoldLevel exists, or
+to "0" if the function does not exist. The "Sh" part in the name of the
+function refers to the file type. For a file type other than sh, say html, the
+name of the function would be PerfitysHtmlFoldLevel.
+
+You can specify another for the 'foldexpr' option by assigning it to a global
+variable in your vimrc file. For example, for the file type sh, the name of
+the variable would be g:perfitys_sh_foldexpr.
+
+If you don't want Perfitys to affect the 'foldmethod' option at all, add the
+following line to your vimrc file:
+
+        let g:perfitys_do_not_set_foldmethod = 1
+
 
 ==============================================================================
 5. Automatic typing

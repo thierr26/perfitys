@@ -149,6 +149,24 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Checks that the argument is a valid value for the foldmethod option.
+"
+" Arguments:
+"
+" #1 - s
+" Anything.
+"
+" Return value:
+" Non-zero if s is one of "manual", "indent", "expr", "marker", "syntax" or
+" "diff".
+function {s:plugin}IsFoldingMethodValue(s)
+    let l:ValidValues
+                \ = ["manual", "indent", "expr", "marker", "syntax", "diff"]
+    return type(a:s) == type("") && index(l:ValidValues, a:s) >= 0
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Checks the existence of a global variable. The name of the variable is "g:"
 " followed by s:prefix ("perfitys_") and followed by the argument. If a second
 " argument is given, an underscore is appended to it and it is appended to
@@ -380,6 +398,16 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Returns the file type with the first letter capitalized.
+"
+" Return value:
+" File type with the first letter capitalized.
+function {s:plugin}FileType()
+    return substitute(&filetype, "^.", '\=toupper(submatch(0))', "")
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Sets the colorcolumn option to the value given as argument if the colorcolumn
 " option is empty, otherwise add the value given as argument if it is not
 " already in the colorcolumn option.
@@ -556,6 +584,35 @@ function {s:plugin}ConfigEndOfLineComment(comment_leader)
             let &comments = &comments . "," . l:append_string
         endif
     endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
+function {s:plugin}SetFoldingMethod(method)
+
+    " Check the argument.
+    if !{s:plugin}IsFoldingMethodValue(a:method)
+        throw "Argument is not a valid value for option foldmethod"
+    endif
+
+    if !{s:plugin}GlobalFlag("do_not_set_foldmethod")
+
+        let &foldmethod = {s:plugin}Get("foldmethod", &filetype, a:method,
+                    \ function(s:plugin . "IsFoldingMethodValue"))
+
+        if &foldmethod ==# "expr"
+            let l:file_type = {s:plugin}FileType()
+            let l:default_foldexpr = s:plugin . l:file_type
+                        \ . "FoldLevel(v:lnum)"
+            if !exists("*" . l:default_foldexpr)
+                let l:default_foldexpr = "0"
+            endif
+            let &foldexpr = {s:plugin}Get("foldexpr", &filetype,
+                        \ l:default_foldexpr,
+                        \ function(s:plugin . "IsNonEmptyString"))
+        endif
+    endif
+
 endfunction
 
 " -----------------------------------------------------------------------------
