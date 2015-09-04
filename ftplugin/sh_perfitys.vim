@@ -61,55 +61,60 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
     endif
 
     " Define some regular expressions.
+    let l:name_char_reg_exp = "[A-Za-z0-9_-]"
     let l:non_empty_reg_exp = '\S'
     let l:comment_reg_exp = '^\s*' . s:comment_leader
-    let l:func_leader_reg_exp = '^\s*[A-Za-z0-9_-]\+\s*()'
-    let l:doc_line_reg_exp = l:comment_reg_exp . '.*[A-Za-z0-9_]\+'
+    let l:empty_or_comment_reg_exp = '^\s*\(' . s:comment_leader . '.*\)*$'
+    let l:func_leader_reg_exp = '^\s*' . l:name_char_reg_exp . '\+\s*()'
 
-    " Get the number of the last line in the buffer.
-    let l:last = line('$')
+    " Save the current cursor position.
+    let l:cur_pos = getcurpos()
 
-    " Initialize l:k and l:l_k with the number of the current line and the
-    " current line respectively.
-    let l:k = a:lnum
-    let l:l_k = getline(l:k)
+    " Initialize the return value.
+    let l:ret = "="
 
-    " Initialize the function output.
-    let l:ret = (l:l_k =~# l:comment_reg_exp || l:l_k !~# l:non_empty_reg_exp)
-                \ ? "=" : 0
+    " Move the cursor to the start of the line with the number given as
+    " argument.
+    call cursor(a:lnum, 1)
 
-    " Move l:k to the number of the next non empty line (or do nothing if the
-    " current line is not empty).
-    while l:k < l:last && l:l_k !~# l:non_empty_reg_exp
-        let l:k += 1
-        let l:l_k = getline(l:k)
-    endwhile
+    " Move to the next non empty line and get its number and text.
+    let l:first_non_empty = search(l:non_empty_reg_exp, 'cW')
+    let l:l_first_non_empty = getline(l:first_non_empty)
 
-    if {s:main_script}#MatchesPrimSep(l:l_k)
-        " The current line (number a:lnum) is an empty line preceding a primary
-        " separator or is a primary separator and could be the beginning of a
+    if {s:main_script}#MatchesPrimSep(l:l_first_non_empty)
+        " The non empty line is a primary separator and may be the start of a
         " function documentation block.
 
-        " Initialize the documentation line counter
-        let l:doc_k = 0
+        let l:k = l:first_non_empty
 
-        " Move l:k to the number of the next non empty and non comment line.
-        while l:k < l:last && (l:l_k !~# l:non_empty_reg_exp
-                    \ || l:l_k =~# l:comment_reg_exp)
-            let l:k += 1
-            let l:l_k = getline(l:k)
-
-            " Increment the documentation line counter if the line looks like a
-            " documentation line.
-            if l:l_k =~# l:doc_line_reg_exp
-                let l:doc_k += 1
+        " Loop over the next empty or comment lines and count the comment
+        " lines.
+        let l:non_empty_doc_block = 0
+        while search(l:empty_or_comment_reg_exp, 'W') == l:k + 1
+            let l:k = l:k + 1
+            if l:non_empty_doc_block == 0 && getline(l:k) =~# l:comment_reg_exp
+                let l:non_empty_doc_block = 1
             endif
         endwhile
 
-        if l:doc_k > 0 && l:l_k =~# l:func_leader_reg_exp
-            let l:ret = 1
+        if l:non_empty_doc_block && l:k < line('$')
+            if getline(l:k + 1) =~# l:func_leader_reg_exp
+                " The line with number l:k + 1 is a function leader line.
+
+                " The line with the number given as argument is the beginning
+                " of a function documentation block which we want to fold such
+                " blocks.
+                let l:ret = 1
+            endif
         endif
+    elseif getline(a:lnum) =~# l:func_leader_reg_exp
+        " The line with the number given as argument is a function leader line
+        " and we don't want to fold such lines.
+        let l:ret = 0
     endif
+
+    " Restore the cursor position.
+    call cursor(l:cur_pos[1], l:cur_pos[2])
 
     return l:ret
 endfunction
