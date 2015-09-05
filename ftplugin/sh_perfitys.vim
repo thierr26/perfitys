@@ -61,17 +61,33 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
     endif
 
     " Define some regular expressions.
-    let l:name_char_reg_exp = "[A-Za-z0-9_-]"
+    let l:name_char_reg_exp = '[A-Za-z0-9_-]\+'
     let l:non_empty_reg_exp = '\S'
     let l:comment_reg_exp = '^\s*' . s:comment_leader
     let l:empty_or_comment_reg_exp = '^\s*\(' . s:comment_leader . '.*\)*$'
-    let l:func_leader_reg_exp = '^\s*' . l:name_char_reg_exp . '\+\s*()'
+    let l:func_leader_reg_exp = '^\s*' . l:name_char_reg_exp . '\s*()'
+    let l:here_doc_pre_delim_reg_exp = '^\s*\S\+\s*<<-\?\s*'
+    let l:here_doc_leader_reg_exp = l:here_doc_pre_delim_reg_exp . '\(\('
+                \ . l:name_char_reg_exp . '\)\|\("' . l:name_char_reg_exp
+                \ . '"\)\)$'
+    let l:here_doc_trailer_reg_exp = '^\s*' . l:name_char_reg_exp . '$'
 
     " Save the current cursor position.
     let l:cur_pos = getcurpos()
 
     " Initialize the return value.
     let l:ret = "="
+
+    " Get the text of the line with the number given as argument.
+    let l:l_lnum = getline(a:lnum)
+
+    if a:lnum > 1
+        " Get the text of the line before the line with the number given as
+        " argument.
+        let l:l_lnum1 = getline(a:lnum - 1)
+    else
+        let l:l_lnum1 = ""
+    endif
 
     " Move the cursor to the start of the line with the number given as
     " argument.
@@ -102,15 +118,55 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
                 " The line with number l:k + 1 is a function leader line.
 
                 " The line with the number given as argument is the beginning
-                " of a function documentation block which we want to fold such
+                " of a function documentation block and we want to fold such
                 " blocks.
                 let l:ret = 1
             endif
         endif
-    elseif getline(a:lnum) =~# l:func_leader_reg_exp
+    elseif l:l_lnum =~# l:func_leader_reg_exp
         " The line with the number given as argument is a function leader line
         " and we don't want to fold such lines.
         let l:ret = 0
+    elseif l:l_first_non_empty =~# l:here_doc_leader_reg_exp
+        " The line with the number given as argument is a here-document leader.
+
+        " Extract the delimiter.
+        let l:here_doc_delim = substitute(l:l_first_non_empty,
+                    \ l:here_doc_pre_delim_reg_exp, "", "")
+        let l:here_doc_delim = matchstr(l:here_doc_delim, l:name_char_reg_exp)
+
+        if search('^\s*' . l:here_doc_delim . '\s*$') != 0
+            " The here-document trailer delimiter exists.
+
+            " The line with the number given as argument is the beginning of a
+            " here-document and we want to fold here-documents.
+            let l:ret = 1
+        endif
+    elseif l:l_lnum1 =~# l:here_doc_trailer_reg_exp
+        " The line before the line with the number given as argument could be a
+        " here-document trailer delimiter.
+
+        " Find the here-document leader above.
+        let l:k = search(l:here_doc_leader_reg_exp, 'bW')
+
+        if l:k != 0
+            " A here-document leader has been found.
+
+            " Extract the delimiter.
+            let l:here_doc_delim = substitute(getline(l:k),
+                        \ l:here_doc_pre_delim_reg_exp, "", "")
+            let l:here_doc_delim
+                        \ = matchstr(l:here_doc_delim, l:name_char_reg_exp)
+
+            if matchstr(l:l_lnum1, l:name_char_reg_exp) ==# l:here_doc_delim
+                " The delimiters match.
+
+                " The before the line with the number given as argument really
+                " is a here-document trailer delimiter and should be the las
+                " line of a fold.
+                let l:ret = 0
+            endif
+        endif
     endif
 
     " Restore the cursor position.
