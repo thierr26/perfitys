@@ -630,6 +630,114 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" For any integer argument greater than 1 and lower than or equal to the number
+" of line in the current buffer, returns the text of the line with number equal
+" to the argument minus 1. For other integer values, returns an empty string.
+"
+" Arguments:
+"
+" #1 - lnum
+" Integer.
+"
+" Return value:
+" Text of the line with number equal to the argument minus 1, or empty string.
+function {s:script}#GetPreviousLine(lnum)
+
+    " Check the argument.
+    if !{s:plugin}IsInteger(a:lnum)
+        throw "Argument must be an integer"
+    endif
+
+    return getline(a:lnum - 1)
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Moves the cursor to the next line containing only the string given as
+" argument, with zero or more spaces or tabulations at the beginning or at the
+" end of the line. Does not wrap around the end of the file.
+"
+" Arguments:
+"
+" #1 - s
+" Any non empty string.
+"
+" Return value:
+" Number of the line containgin the string or 0 if such line not found.
+function {s:script}#NextIsolateOccurence(s)
+
+    " Check the argument.
+    if !{s:plugin}IsNonEmptyString(a:s)
+        throw "Argument must be a string"
+    endif
+
+    return search('^\s*' . a:s . '\s*$')
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Moves the cursor to the next non empty line or does not move the cursor if
+" the current line is not empty. Does not wrap around the end of the file.
+"
+" Return value:
+" Text of the next non empty line or of the current line if the current line is
+" not empty (or an empty string if no non empty line is found).
+function {s:script}#NextNonEmptyLine()
+    let l:lnum = search('\S', 'cW')
+    if l:lnum != 0
+        let l:ret = getline(l:lnum)
+    else
+        let l:ret = ""
+    endif
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Moves the cursor to the next line which is not an empty line and not an end
+" of line comment line. Does not move the cursor if no such line is found. Does
+" not wrap around the end of the file. In this function, what is called an end
+" of line comment line is a line starting with zero or more spaces or
+" tabulations followed by the comment leader, followed by zero or more
+" characters. The comment leader is found in dictionary variable
+" b:perfitys_comment (component "leader") or is set to an empty string if such
+" a variable is not found.
+"
+" Return value:
+" 0 if only empty lines have been found while moving to the next line which is
+" not an empty line and not an end of line comment line, 1 otherwise.
+function {s:script}#NextNonEmptyNonEndOfLineCommentLine()
+
+    " Get the number of the current line.
+    let l:k = line('.')
+
+    " Initialize the comment line count.
+    let l:at_least_one_comment_found = 0
+
+    " Get the comment leader.
+    let l:comment = {s:plugin}GetLocal("comment",
+                \ {'leader': "", 'trailer': ""}, function("s:IsCommentDict"))
+    let l:comment_leader = l:comment["leader"]
+
+    " Define a regular expression for empty or end of line comment lines.
+    let l:empty_or_comment_reg_exp = '^\s*\(' . l:comment_leader . '.*\)*$'
+
+    " Define a regular expression for end of line comment lines.
+    let l:comment_reg_exp = '^\s*' . l:comment_leader
+
+    while search(l:empty_or_comment_reg_exp, 'W') == l:k + 1
+        let l:k = l:k + 1
+        if !l:at_least_one_comment_found && getline(l:k) =~# l:comment_reg_exp
+            let l:at_least_one_comment_found = 1
+        endif
+    endwhile
+    call cursor(l:k + 1, 1)
+
+    return l:at_least_one_comment_found
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
