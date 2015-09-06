@@ -33,52 +33,6 @@ let s:prim_sep_default_dic = {
 
 " -----------------------------------------------------------------------------
 
-" Returns the value of a buffer local plugin related parameter. The name of the
-" parameter is "b:" followed by s:prefix followed by the first argument to the
-" function. If this variable does not exists, then the function returns the
-" value of the second argument.
-"
-" Note that no validity check are performed for the buffer local variable as
-" well as for the default value.
-"
-" Arguments:
-"
-" #1 - ident
-" Plugin related identifier ("foo" in the examples).
-"
-" #2 - default
-" Default value.
-"
-" #3 - IsValid
-" Reference (funcref) to a function designed to check the value of the plugin
-" related parameter. This function must return a non-zero value if the value of
-" the plugin related parameter is valid and zero otherwise.
-"
-" Return value:
-" Value of the buffer local plugin related parameter.
-function s:GetLocal(ident, default, IsValid)
-
-    " Check the arguments.
-    if !{s:plugin}IsParamIdent(a:ident)
-        throw "Invalid identifier"
-    endif
-
-    if exists("b:" . s:prefix . a:ident)
-        let l:ret = b:{s:prefix}{a:ident}
-    else
-        let l:ret = a:default
-    endif
-
-    if !a:IsValid(l:ret)
-        throw "Invalid local " . a:ident . " parameter for " . s:plugin
-                    \ .  " plugin"
-    endif
-
-    return l:ret
-endfunction
-
-" -----------------------------------------------------------------------------
-
 " Checks that the argument is a dictionary containing a valid comment leader
 " and a valid comment trailer. See in file ftplugin/c_perfitys.vim the
 " statement:
@@ -224,7 +178,7 @@ endfunction
 function {s:script}#PrimSep()
 
     let l:ident = "prim_sep"
-    let l:local_sep = s:GetLocal(l:ident, s:prim_sep_default_dic,
+    let l:local_sep = {s:plugin}GetLocal(l:ident, s:prim_sep_default_dic,
                 \ function("s:IsSepDict"))
 
     call s:PutSep({s:plugin}Get(l:ident, &filetype, l:local_sep,
@@ -243,7 +197,7 @@ endfunction
 function {s:script}#SecondSep()
 
     let l:ident = "second_sep"
-    let l:local_sep = s:GetLocal(l:ident, {
+    let l:local_sep = {s:plugin}GetLocal(l:ident, {
                 \ 'indent_level': 0,
                 \ 'post_comment_leader_space': " ",
                 \ 'repeating_sequence': "-",
@@ -295,7 +249,7 @@ function s:Sep(sep)
         throw "Invalid separator line dictionary"
     endif
 
-    let l:comment = s:GetLocal("comment", {'leader': "", 'trailer': ""},
+    let l:comment = {s:plugin}GetLocal("comment", {'leader': "", 'trailer': ""},
                 \ function("s:IsCommentDict"))
 
     if &expandtab
@@ -347,7 +301,7 @@ function s:SepRegExp(sep)
         throw "Invalid separator line dictionary"
     endif
 
-    let l:comment = s:GetLocal("comment", {'leader': "", 'trailer': ""},
+    let l:comment = {s:plugin}GetLocal("comment", {'leader': "", 'trailer': ""},
                 \ function("s:IsCommentDict"))
 
     let l:non_escaped_repeating_sep = a:sep['repeating_sequence']

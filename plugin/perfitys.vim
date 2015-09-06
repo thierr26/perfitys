@@ -398,6 +398,52 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Returns the value of a buffer local plugin related parameter. The name of the
+" parameter is "b:" followed by s:prefix followed by the first argument to the
+" function. If this variable does not exists, then the function returns the
+" value of the second argument.
+"
+" Note that no validity check are performed for the buffer local variable as
+" well as for the default value.
+"
+" Arguments:
+"
+" #1 - ident
+" Plugin related identifier.
+"
+" #2 - default
+" Default value.
+"
+" #3 - IsValid
+" Reference (funcref) to a function designed to check the value of the plugin
+" related parameter. This function must return a non-zero value if the value of
+" the plugin related parameter is valid and zero otherwise.
+"
+" Return value:
+" Value of the buffer local plugin related parameter.
+function {s:plugin}GetLocal(ident, default, IsValid)
+
+    " Check the arguments.
+    if !{s:plugin}IsParamIdent(a:ident)
+        throw "Invalid identifier"
+    endif
+
+    if exists("b:" . s:prefix . a:ident)
+        let l:ret = b:{s:prefix}{a:ident}
+    else
+        let l:ret = a:default
+    endif
+
+    if !a:IsValid(l:ret)
+        throw "Invalid local " . a:ident . " parameter for " . s:plugin
+                    \ .  " plugin"
+    endif
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Returns the file type with the first letter capitalized.
 "
 " Return value:
