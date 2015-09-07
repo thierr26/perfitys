@@ -61,7 +61,7 @@ set cpo&vim
 "
 " Return value:
 " Here-document delimiter or empty string.
-function s:HereDocDelimiter(s)
+function! s:HereDocDelimiter(s)
 
     let l:ret = substitute(a:s, b:perfitys_reg_exp["here_doc_leader"], "", "")
 
