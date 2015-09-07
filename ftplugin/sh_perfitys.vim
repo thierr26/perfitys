@@ -63,10 +63,11 @@ set cpo&vim
 " Here-document delimiter or empty string.
 function! s:HereDocDelimiter(s)
 
-    let l:ret = substitute(a:s, b:perfitys_reg_exp["here_doc_leader"], "", "")
+    let l:ret = substitute(a:s,
+                \ b:{s:main_script}_reg_exp["here_doc_leader"], "", "")
 
     if l:ret !=# a:s
-        let l:ret = matchstr(l:ret, b:perfitys_reg_exp["name"])
+        let l:ret = matchstr(l:ret, b:{s:main_script}_reg_exp["name"])
     else
         let l:ret = ""
     endif
@@ -116,12 +117,13 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
 
     if {s:main_script}#MatchesPrimSep(l:first_non_empty)
                 \ && {s:main_script}#NextNonEmptyNonEndOfLineCommentLine()
-                \ && getline('.') =~# b:perfitys_reg_exp["function_leader"]
+                \ && getline('.')
+                    \ =~# b:{s:main_script}_reg_exp["function_leader"]
         " The line with the number given as argument is the beginning of (or an
         " empty line preceding the beginning of) a function documentation block
         " and we want to fold such blocks.
         let l:ret = 1
-    elseif l:l =~# b:perfitys_reg_exp["function_leader"]
+    elseif l:l =~# b:{s:main_script}_reg_exp["function_leader"]
         " The line with the number given as argument is a function leader line
         " and we don't want to fold such lines.
         let l:ret = 0
@@ -130,10 +132,11 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
         " The line with the number given as argument is the beginning of a
         " here-document and we want to fold here-documents.
         let l:ret = 1
-    elseif l:l1 =~# b:perfitys_reg_exp["here_doc_trailer"]
-                \ && search(b:perfitys_reg_exp["here_doc_leader"], 'bW') != 0
+    elseif l:l1 =~# b:{s:main_script}_reg_exp["here_doc_trailer"]
+                \ && search(b:{s:main_script}_reg_exp["here_doc_leader"],
+                    \ 'bW') != 0
                 \ && s:HereDocDelimiter(getline('.'))
-                    \ ==# matchstr(l:l1, b:perfitys_reg_exp["name"])
+                    \ ==# matchstr(l:l1, b:{s:main_script}_reg_exp["name"])
         " The line before the line with the number given as argument is a
         " here-document trailer delimiter and must be the last line of a fold.
         let l:ret = 0
