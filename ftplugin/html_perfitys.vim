@@ -20,9 +20,6 @@ let s:main_script = substitute(s:script, '^[^_]\+_', '', "")
 " Compute the plugin name (with the first letter capitalized).
 let s:plugin = substitute(s:main_script, "^.", '\=toupper(submatch(0))', "")
 
-" Compute the file type with the first letter capitalized.
-let s:file_type = {s:plugin}FileType()
-
 if !exists("g:" . s:main_script . "_enabled")
     " The general enable flag for the plugin has not been set by the
     " plugin/perfitys.vim script.
