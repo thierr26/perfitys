@@ -55,7 +55,7 @@ set cpo&vim
 function! s:ForceUTF8EncForHTML5()
 
     " Save the current cursor position.
-    let l:cur_pos = getcurpos()
+    let l:cur_pos = getpos('.')
 
     " Move to the beginning of the file.
     call cursor(1, 1)
@@ -67,7 +67,7 @@ function! s:ForceUTF8EncForHTML5()
     endif
 
     " Restore the cursor position.
-    call cursor(l:cur_pos[1], l:cur_pos[2])
+    call setpos('.', l:cur_pos)
 
 endfunction
 

@@ -94,7 +94,7 @@ endfunction
 function! {s:plugin}{s:file_type}FoldLevel(lnum)
 
     " Save the current cursor position.
-    let l:cur_pos = getcurpos()
+    let l:cur_pos = getpos('.')
 
     " Initialize the return value.
     let l:ret = "="
@@ -143,7 +143,7 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
     endif
 
     " Restore the cursor position.
-    call cursor(l:cur_pos[1], l:cur_pos[2])
+    call setpos('.', l:cur_pos)
 
     return l:ret
 endfunction
