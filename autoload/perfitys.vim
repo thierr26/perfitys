@@ -668,7 +668,7 @@ function {s:script}#NextIsolateOccurence(s)
 
     " Check the argument.
     if !{s:plugin}IsNonEmptyString(a:s)
-        throw "Argument must be a string"
+        throw "Argument must be a non empty string"
     endif
 
     return search('^\s*' . a:s . '\s*$')
