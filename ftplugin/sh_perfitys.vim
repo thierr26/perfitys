@@ -56,6 +56,8 @@ set cpo&vim
 "
 " Relies on the existence of the b:perfitys_reg_exp dictionary.
 "
+" Arguments:
+"
 " #1 - s
 " Any string, is supposed to be a buffer line.
 "
@@ -85,6 +87,8 @@ endfunction
 " - :help perfitys-foldmethod
 "
 " Relies on the existence of the b:perfitys_reg_exp dictionary.
+"
+" Arguments:
 "
 " #1 - lnum
 " Any integer, supposed to be a buffer line number.
@@ -144,6 +148,69 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
 
     " Restore the cursor position.
     call setpos('.', l:cur_pos)
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Perfitys fold text function for the file type, automatically activated if the
+" Perfitys default fold level function for the file type is selected.
+" For more information on fold text, see:
+" - :help fold-foldtext
+"
+" Relies on the existence of the b:perfitys_reg_exp dictionary.
+"
+" Return value:
+" Fold text.
+function! {s:plugin}{s:file_type}FoldText()
+
+    let l:ret = ""
+    let l:k = v:foldstart
+    let l:sep_found = 0
+    let l:here_doc_leader_found = 0
+    let l:here_doc = ""
+    while l:k < v:foldend && l:ret == ""
+
+        let l:l = getline(l:k)
+
+        if l:sep_found && l:l != ""
+            " l:l is the first line of the documentation block of a function.
+
+            let l:ret = l:l
+        endif
+
+        let l:sep_found = l:sep_found || {s:main_script}#MatchesPrimSep(l:l)
+
+        let l:here_doc_leader_found = l:here_doc_leader_found
+                    \ || l:l =~# b:{s:main_script}_reg_exp["here_doc_leader"]
+        if l:here_doc_leader_found
+            if l:here_doc == ""
+                " l:l is the leader line of a here-document.
+
+                let l:here_doc = l:l
+            elseif l:l != ""
+                " l:l is a non empty line in a here-document.
+
+                let l:here_doc = l:here_doc
+                            \ . " " . substitute(l:l, '^\s*', "", "")
+            endif
+
+            if strlen(l:here_doc) >= winwidth(0)
+                " We have copied enough of the here-document in l:here_doc.
+
+                let l:ret = l:here_doc
+            endif
+        endif
+
+        let l:k = l:k + 1
+    endwhile
+
+    if l:ret == ""
+        let l:ret = foldtext()
+    else
+        let l:ret = v:folddashes . l:ret
+    endif
 
     return l:ret
 endfunction

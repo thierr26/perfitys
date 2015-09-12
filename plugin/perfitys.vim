@@ -652,6 +652,12 @@ function {s:plugin}SetFoldingMethod(method)
                         \ . "FoldLevel(v:lnum)"
             if !exists("*" . l:default_foldexpr)
                 let l:default_foldexpr = "0"
+            else
+                let l:foldtext_for_default_foldexpr
+                            \ = s:plugin . l:file_type . "FoldText()"
+                if exists("*" . l:foldtext_for_default_foldexpr)
+                    let &foldtext = l:foldtext_for_default_foldexpr
+                endif
             endif
             let &foldexpr = {s:plugin}Get("foldexpr", &filetype,
                         \ l:default_foldexpr,
