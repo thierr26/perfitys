@@ -738,6 +738,33 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Returns a non-zero value if the argument is an end of line comment line, zero
+" othrerwise.
+"
+" Arguments:
+"
+" #1 - s
+" Any string.
+"
+" Return value:
+" 1 if the argument is an end of line comment line, 0 otherwise.
+function {s:script}#IsEndOfLineComment(s)
+
+    " Check the argument.
+    if type(a:s) != type("")
+        throw "Argument must be a string"
+    endif
+
+    " Get the comment leader.
+    let l:comment = {s:plugin}GetLocal("comment",
+                \ {'leader': "", 'trailer': ""}, function("s:IsCommentDict"))
+
+    return a:s =~# '^\s*' . l:comment["leader"]
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 

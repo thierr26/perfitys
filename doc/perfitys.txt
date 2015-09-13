@@ -83,6 +83,7 @@ gitcommit
 haskell
 help
 html
+matlab
 php
 sh
 text
@@ -133,7 +134,7 @@ default settings are as follows:
 | ada, c, conf, css, haskell, html | 79                       |
 | gitcommit                        | 72                       |
 | help, text                       | 78                       |
-| php, sh, vim, xdefaults          | 79                       |
+| php, sh, vim, xdefaults, matlab  | 79                       |
 
 The default settings can be overwritten by setting global variables in your
 |vimrc| file. For example, if you want a text width of 80 for the sh file
@@ -183,6 +184,7 @@ the file type. The default settings are as follows:
 | c, conf, css  | 4                                                       |
 | gitcommit     | 4                                                       |
 | haskell, html | 4                                                       |
+| matlab        | 4                                                       |
 | php, sh, vim  | 4                                                       |
 | help, text    | 8                                                       |
 | xdefaults     | 4                                                       |
@@ -301,7 +303,7 @@ type. The default settings are as follows:
 
 | File type        | 'foldmethod' option value             |
 |----------------- + --------------------------------------|
-| sh               | expr                                  |
+| sh, vim          | expr                                  |
 | other file types | 'foldmethod' not affected by Perfitys |
 
 The default settings can be overwritten by setting global variables in your
@@ -318,9 +320,24 @@ to "0" if the function does not exist. The "Sh" part in the name of the
 function refers to the file type. For a file type other than sh, say html, the
 name of the function would be PerfitysHtmlFoldLevel.
 
-You can specify another for the 'foldexpr' option by assigning it to a global
-variable in your |vimrc| file. For example, for the file type sh, the name of
-the variable would be g:perfitys_sh_foldexpr.
+You can specify another expression for the 'foldexpr' option by assigning it
+to a global variable in your |vimrc| file. For example, for the file type sh,
+the name of the variable would be g:perfitys_sh_foldexpr.
+
+You can see the behavior of Perfitys by downloading and opening the following
+files:
+
+pull_vim_plugins from this repository:
+https://github.com/thierr26/thierr26_vim-gtk_config/blob/master/
+
+plugin/perfitys.vim from this repository:
+https://github.com/thierr26/perfitys
+
+                                                *perfitys-foldtext*
+As far as the 'foldtext' option is concerned, you can specify your own
+expression by assigning it to a global variable in your |vimrc| file. For
+example, for the file type sh, the name of the variable would be
+g:perfitys_sh_foldtext.
 
                                         *perfitys_do_not_set_foldmethod*
                                         *g:perfitys_do_not_set_foldmethod*
