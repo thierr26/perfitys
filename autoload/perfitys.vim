@@ -522,11 +522,13 @@ endfunction
 
 " If the dictionnary given as first argument has a key matching the file type
 " given as second argument, then the function returns the associated value if
-" it is not empty. If it is empty, an exception is thrown.
+" it is not empty.
 "
 " If the dictionnary given as first argument has no key matching the file type
 " given as second argument, then the function looks for a value matching the
-" filetype and returns the associated key if such a value is found.
+" file type and returns the associated key if such a value is found.
+"
+" Otherwise, returns an empty string.
 "
 " Arguments:
 "
