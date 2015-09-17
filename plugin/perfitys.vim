@@ -37,6 +37,8 @@ let s:prefix = s:script . "_"
 let s:plugin = substitute(s:script, "^.", '\=toupper(submatch(0))', "")
 
 let s:common = "common"
+let s:plugin_menu = "Plugin"
+let s:menu_separator_count = 0
 
 " -----------------------------------------------------------------------------
 
@@ -788,7 +790,7 @@ function s:DefineMenuForAutoloadFunc(func, menu_entry)
     endif
 
     " Build menu entry location.
-    let l:menu_location = "Plugin." . s:plugin . "."
+    let l:menu_location = s:plugin_menu . "." . s:plugin . "."
 
     execute "noremenu <script> " . l:menu_location
                 \ . escape(a:menu_entry, ' ')
@@ -823,6 +825,18 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Inserts a menu separator in the Plugin|Perfitys menu.
+"
+" Return value:
+" 0
+function s:InsertMenuSeparator()
+    let s:menu_separator_count = s:menu_separator_count + 1
+    execute "menu " . s:plugin_menu . "." . s:plugin
+                \ . ".-" . s:menu_separator_count . "- :"
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Set the general enable flag for the plugin.
 let g:{s:script}_enabled = 1
 
@@ -834,8 +848,12 @@ call s:DefineMapCommandAndMenu("SecondSep", "<Leader>S",
             \ "Insert Secondary Separator Line")
 call s:DefineCommandForAutoloadFunc("PrimSep", "Sep")
 
+call s:InsertMenuSeparator()
+
 call s:DefineMapCommandAndMenu("AltFileType", "<Leader>FT",
             \ "Switch to the alternative file type")
+
+call s:InsertMenuSeparator()
 
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
