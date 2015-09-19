@@ -728,7 +728,7 @@ function {s:script}#NextNonEmptyNonEndOfLineCommentLine()
     let l:comment_reg_exp = '^\s*' . l:comment_leader
 
     while search(l:empty_or_comment_reg_exp, 'W') == l:k + 1
-        let l:k = l:k + 1
+        let l:k += 1
         if !l:at_least_one_comment_found && getline(l:k) =~# l:comment_reg_exp
             let l:at_least_one_comment_found = 1
         endif

@@ -203,7 +203,7 @@ function! {s:plugin}{s:file_type}FoldText()
             endif
         endif
 
-        let l:k = l:k + 1
+        let l:k += 1
     endwhile
 
     if l:ret == ""

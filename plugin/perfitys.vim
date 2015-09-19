@@ -830,7 +830,7 @@ endfunction
 " Return value:
 " 0
 function s:InsertMenuSeparator()
-    let s:menu_separator_count = s:menu_separator_count + 1
+    let s:menu_separator_count += 1
     execute "menu " . s:plugin_menu . "." . s:plugin
                 \ . ".-" . s:menu_separator_count . "- :"
 endfunction

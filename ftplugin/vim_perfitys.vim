@@ -156,7 +156,7 @@ function! {s:plugin}{s:file_type}FoldText()
             let l:ret = l:l . repeat(" ", winwidth(0) - strlen(l:l))
         endif
 
-        let l:k = l:k + 1
+        let l:k += 1
     endwhile
 
     if l:ret == ""
