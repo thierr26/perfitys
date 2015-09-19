@@ -605,6 +605,29 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Checks the availability of an alternative file type.
+"
+" Return value:
+" Zero if no alternative file type is available, non-zero otherwise.
+function {s:script}#AltFileTypeAvail()
+    if &filetype != ""
+        let l:alt_filetype_dict = {s:plugin}Get("alt_filetype", {
+                    \ 'help': "text",
+                    \ 'php': "html"
+                    \ }, function("s:IsDict"))
+        if s:CheckedAltFileType(l:alt_filetype_dict, &filetype) ==# &filetype
+            let l:ret = 0
+        else
+            let l:ret = 1
+        endif
+    else
+        let l:ret = 0
+    endif
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Changes filetype to the alternative file type.
 "
 " Return value:

@@ -39,6 +39,7 @@ let s:plugin = substitute(s:script, "^.", '\=toupper(submatch(0))', "")
 let s:common = "common"
 let s:plugin_menu = "Plugin"
 let s:menu_separator_count = 0
+let s:added_menus_list = []
 
 " -----------------------------------------------------------------------------
 
@@ -780,21 +781,30 @@ endfunction
 "
 " Return value:
 " 0
-function s:DefineMenuForAutoloadFunc(func, menu_entry)
+function s:DefineMenuForAutoloadFunc(func, menu_entry, AvailabilityFunc)
 
     " Check the arguments.
     if !{s:plugin}IsFuncIdent(a:func)
         throw "Invalid function identifier"
     elseif !{s:plugin}IsNonEmptyString(a:menu_entry)
         throw "Invalid menu entry"
+    elseif !empty(a:AvailabilityFunc)
+                \ && type(a:AvailabilityFunc) != type(function("tr"))
+        throw "Third argument must be a funcref or an empty string"
     endif
 
-    " Build menu entry location.
-    let l:menu_location = s:plugin_menu . "." . s:plugin . "."
+    let l:full_menu_entry = escape(s:plugin_menu . "." . s:plugin . "."
+                \ . a:menu_entry, ' ')
 
-    execute "noremenu <script> " . l:menu_location
-                \ . escape(a:menu_entry, ' ')
+    execute "noremenu <script> " . l:full_menu_entry
                 \ . " :call " . s:AutoloadFuncFullName(a:func) . "()<CR>"
+
+    " Add the newly created menu to a list, along with the availability
+    " function.
+    call add(s:added_menus_list, {
+                \ 'entry': l:full_menu_entry,
+                \ 'AvailabilityFunc': a:AvailabilityFunc,
+                \ })
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -817,10 +827,10 @@ endfunction
 "
 " Return value:
 " 0
-function s:DefineMapCommandAndMenu(func, map, menu_entry)
+function s:DefineMapCommandAndMenu(func, map, menu_entry, AvailabilityFunc)
     call s:DefineMapToAutoloadFunc(a:func, a:map)
     call s:DefineCommandForAutoloadFunc(a:func)
-    call s:DefineMenuForAutoloadFunc(a:func, a:menu_entry)
+    call s:DefineMenuForAutoloadFunc(a:func, a:menu_entry, a:AvailabilityFunc)
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -837,23 +847,49 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Updates the enable state of the menu entries added by Perfitys.
+"
+" Return value:
+" 0
+function s:UpdateMenusEnableState()
+    for menu in s:added_menus_list
+        let l:AvailabilityFunc = menu['AvailabilityFunc']
+        let l:state = " disable "
+        if empty(l:AvailabilityFunc) || l:AvailabilityFunc()
+            let l:state = " enable "
+        endif
+        execute "menu" . l:state . menu['entry']
+
+        " Removing l:AvailabilityFunc is necessary to avoid a "variable type
+        " mismatch" error on the next iteration of the loop, because
+        " menu['AvailabilityFunc'] can be of different types (string or
+        " funcref).
+        unlet l:AvailabilityFunc
+    endfor
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Set the general enable flag for the plugin.
 let g:{s:script}_enabled = 1
 
 " Define maps, commands and menus.
 
 call s:DefineMapCommandAndMenu("PrimSep", "<Leader>SS",
-            \ "Insert Primary Separator Line")
+            \ "Insert Primary Separator Line", "")
 call s:DefineMapCommandAndMenu("SecondSep", "<Leader>S",
-            \ "Insert Secondary Separator Line")
+            \ "Insert Secondary Separator Line", "")
 call s:DefineCommandForAutoloadFunc("PrimSep", "Sep")
 
 call s:InsertMenuSeparator()
 
 call s:DefineMapCommandAndMenu("AltFileType", "<Leader>FT",
-            \ "Switch to the alternative file type")
+            \ "Switch to the alternative file type",
+            \ function(s:AutoloadFuncFullName("AltFileTypeAvail")))
 
 call s:InsertMenuSeparator()
+
+autocmd FileType,BufEnter * call s:UpdateMenusEnableState()
 
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
