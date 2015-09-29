@@ -51,6 +51,16 @@ call {s:plugin}SetTabPreferences(4, "expandtab")
 
 call {s:plugin}ConfigEndOfLineComment("%")
 
+call {s:plugin}SetLocal("second_sep", {
+            \ 'indent_level': 1,
+            \ 'post_comment_leader_space': " ",
+            \ 'repeating_sequence': "- ",
+            \ 'length': &textwidth - 8,
+            \ 'pre_comment_trailer_space': " ",
+            \ 'empty_lines_above': 1,
+            \ 'empty_lines_below': 1,
+            \ })
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
