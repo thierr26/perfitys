@@ -68,6 +68,8 @@ call {s:plugin}SetLocal("second_sep", {
             \ 'empty_lines_below': 0,
             \ })
 
+call {s:plugin}SetFoldingMethod("manual")
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 

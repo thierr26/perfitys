@@ -80,6 +80,8 @@ call {s:plugin}SetLocal("comment", {'leader': "<!--", 'trailer': "-->"})
 
 call s:ForceUTF8EncForHTML5()
 
+call {s:plugin}SetFoldingMethod("manual")
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 

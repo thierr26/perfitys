@@ -51,6 +51,8 @@ call {s:plugin}SetTabPreferences(4, "expandtab")
 
 call {s:plugin}ConfigEndOfLineComment("!")
 
+call {s:plugin}SetFoldingMethod("manual")
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
