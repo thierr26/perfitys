@@ -3,7 +3,8 @@
 The author has started writing the Perfitys Vim plugin to fulfill his personal
 needs as a Vim user without cluttering his vimrc file with autocommands and
 other settings. The plugin applies per file type settings and offers some
-automatic typing fonctionalities.
+basic IDE (Integrated Development environment) features and automatic typing
+fonctionalities.
 
 The default behaviour of the plugin may not be suitable to every Vim users but
 the plugin is extremely customizable and every default setting can be
@@ -25,10 +26,12 @@ supported. But support for other file types can easily be added.
         4.4. "End of line" comment
         4.5. Bullet-lists
         4.6. Folding method
-5. Automatic typing
-        5.1. Primary separator
-        5.2. Secondary separator
-6. Credits and licensing
+5. IDE features
+        5.1. Running the current file
+6. Automatic typing
+        6.1. Primary separator
+        6.2. Secondary separator
+7. Credits and licensing
 
 ==============================================================================
 1. Installation
@@ -338,12 +341,68 @@ following line to your vimrc file:
 
         let g:perfitys_do_not_set_foldmethod = 1
 
+==============================================================================
+5. IDE features
+
+5.1 Running the current file
+
+
+Perfitys provides a function to run the currently edited file with user
+defined arguments. This function can be operated using the :RunWithArgs
+command, or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: F8
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysRunWithArgs
+
+The function lets the user type the arguments (separated by spaces) to be used
+and then runs the currently edited files with those arguments.
+
+
+Another function is provided to run the currently edited file again with the
+same arguments. This function can be operated using the :RunAgainWithArgs
+command, or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: F9
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysRunAgainWithArgs
+
+
+By default, the output is displayed in the status line. You can change this
+behavior using the :RedirectOutputToNewBuffer command. It causes the output to
+be redirected to new buffer.
+
+The command is available in the Plugin | Perfitys menu and a key mapping is
+defined: <Leader>RR
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysRedirectOutputToNewBuffer
+
+
+You can revert to the default behavior using the
+:DoNotRedirectOutputToNewBuffer. The key mapping is: <Leader>RN
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file:
+
+        map <Leader>ZZ <Plug>PerfitysDoNotRedirectOutputToNewBuffer
+
+Running the current file is currently applicable to the files of type:
+sh
 
 ==============================================================================
-5. Automatic typing
+6. Automatic typing
 
 
-5.1. Primary separator
+6.1. Primary separator
 
 Perfitys provides a function for inserting a separator line in the current
 buffer. Well actually two functions, because the author has encountered the
@@ -405,7 +464,7 @@ file:
 
 
 ----------------------------------------------
-5.2. Secondary separator
+6.2. Secondary separator
 
 Secondary separator lines are similar to primary separator lines, but they can
 have there own look.
@@ -454,7 +513,7 @@ to apply the look to files of type "sh" only, or
 to apply the look to all file types.
 
 ==============================================================================
-6. Credits and licensing
+7. Credits and licensing
 
 Author: Thierry Rascle (thierr26@free.fr)
 

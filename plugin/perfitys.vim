@@ -136,6 +136,21 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Checks that the argument is a string.
+"
+" Arguments:
+"
+" #1 - s
+" Anything.
+"
+" Return value:
+" Non-zero if the argument is a string, zero otherwise.
+function {s:plugin}IsString(s)
+    return type(a:s) == type("")
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Checks that the argument is a valid value for the expandtab option.
 "
 " Arguments:
@@ -851,7 +866,7 @@ endfunction
 "
 " Return value:
 " 0
-function s:UpdateMenusEnableState()
+function {s:plugin}UpdateMenusEnableState()
     for menu in s:added_menus_list
         let l:AvailabilityFunc = menu['AvailabilityFunc']
         let l:state = " disable "
@@ -889,7 +904,20 @@ call s:DefineMapCommandAndMenu("AltFileType", "<Leader>FT",
 
 call s:InsertMenuSeparator()
 
-autocmd FileType,BufEnter * call s:UpdateMenusEnableState()
+call s:DefineMapCommandAndMenu("DoNotRedirectOutputToNewBuffer", "<Leader>RN",
+            \ "Don't redirect output to new buffer",
+            \ function(s:AutoloadFuncFullName("RedirectOutputAvailAndOn")))
+call s:DefineMapCommandAndMenu("RedirectOutputToNewBuffer", "<Leader>RR",
+            \ "Redirect output to new buffer",
+            \ function(s:AutoloadFuncFullName("RedirectOutputAvailAndOff")))
+call s:DefineMapCommandAndMenu("RunWithArgs", "<F8>",
+            \ "Enter arguments and run the current file",
+            \ function(s:AutoloadFuncFullName("RunWithArgsAvail")))
+call s:DefineMapCommandAndMenu("RunAgainWithArgs", "<F9>",
+            \ "Run once more with the same arguments",
+            \ function(s:AutoloadFuncFullName("RunAgainWithArgsAvail")))
+
+autocmd FileType,BufEnter * call {s:plugin}UpdateMenusEnableState()
 
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo

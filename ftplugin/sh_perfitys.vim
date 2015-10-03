@@ -217,6 +217,59 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Runs the file in the buffer (which is supposed to be a shell script).
+"
+" Relies on the existence of the b:perfitys_run_params dictionary.
+"
+" Arguments:
+"
+" #1 - reuse_args_without_confirm
+" Non zero to run with the same arguments as in the previous call without
+" requesting confirmation from the user, zero to request confirmation.
+"
+" Return value:
+" Exit status of the script
+function! {s:plugin}{s:file_type}RunWithArgs(reuse_args_without_confirm)
+
+    let l:file_name = expand('%')
+    if l:file_name == ""
+        throw "No file name"
+    endif
+
+    let l:command = l:file_name . b:{s:main_script}_run_params["arguments"]
+    if !a:reuse_args_without_confirm
+        let l:command = input("", l:command, "file")
+    endif
+
+    if l:command ==# l:file_name || l:command =~# '^' . l:file_name . ' '
+        " The user input is the current file with zero or more arguments.
+
+        " Get the arguments from the user input.
+        let l:args = substitute(l:command, '^' . l:file_name, "", "")
+
+        " Save the arguments for the next time.
+        let b:{s:main_script}_run_params["arguments"] = l:args
+
+        echo "\n"
+        " Run the command input by the user, but with the file name expanded to
+        " full path to avoid a "command not found" error.
+        let b:{s:main_script}_run_params["run_count"] += 1
+        let l:actually_run_command = expand('%:p') . l:args
+        if b:{s:main_script}_run_params["redirect_to_new_buffer"]
+            let l:vim_ex_cmd = 'new | read !' . l:actually_run_command
+        else
+            let l:vim_ex_cmd = "!" . l:actually_run_command
+        endif
+        execute l:vim_ex_cmd
+        return v:shell_error
+    else
+        throw "Expected the command to be the file in the current buffer"
+    endif
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(4, "expandtab")
 
@@ -232,6 +285,12 @@ call {s:plugin}SetLocal("reg_exp", {
             \ })
 
 call {s:plugin}SetFoldingMethod("expr")
+
+call {s:plugin}SetLocal("run_params", {
+            \ 'arguments': " ",
+            \ 'redirect_to_new_buffer': 0,
+            \ 'run_count': 0,
+            \ })
 
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo

@@ -655,6 +655,154 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Checks that the option to redirect the output to a new buffer is available
+" for the current file type and is on.
+"
+" Return value:
+" Zero if the option is not available or is off, non zero otherwise.
+function {s:script}#RedirectOutputAvailAndOn()
+    let l:ret = 0
+    if exists("b:" . s:prefix . "run_params")
+        let l:d_shallow_copy = copy(b:{s:prefix}run_params)
+        call filter(l:d_shallow_copy, 'v:key ==# "redirect_to_new_buffer"')
+        if !empty(l:d_shallow_copy)
+            let l:ret = b:{s:prefix}run_params["redirect_to_new_buffer"]
+        endif
+    endif
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks that the option to redirect the output to a new buffer is available
+" for the current file type and is off.
+"
+" Return value:
+" Non zero if the option is available and is off, zero otherwise.
+function {s:script}#RedirectOutputAvailAndOff()
+    let l:ret = 0
+    if exists("b:" . s:prefix . "run_params")
+        let l:d_shallow_copy = copy(b:{s:prefix}run_params)
+        call filter(l:d_shallow_copy, 'v:key ==# "redirect_to_new_buffer"')
+        if !empty(l:d_shallow_copy)
+            let l:ret = !b:{s:prefix}run_params["redirect_to_new_buffer"]
+        endif
+    endif
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Causes the output not to be redirected when running perfitys#RunWithArgs.
+"
+" Return value:
+" 0
+function {s:script}#DoNotRedirectOutputToNewBuffer()
+    if !{s:script}#RedirectOutputAvailAndOn()
+                \ && !{s:script}#RedirectOutputAvailAndOff()
+        throw "Not applicable to files of type " . &filetype
+    endif
+    let b:{s:prefix}run_params["redirect_to_new_buffer"] = 0
+    echomsg "Output won't be redirected to a new buffer."
+    call {s:plugin}UpdateMenusEnableState()
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Causes the output to be redirected when running perfitys#RunWithArgs.
+"
+" Return value:
+" 0
+function {s:script}#RedirectOutputToNewBuffer()
+    if !{s:script}#RedirectOutputAvailAndOn()
+                \ && !{s:script}#RedirectOutputAvailAndOff()
+        throw "Not applicable to files of type " . &filetype
+    endif
+    let b:{s:prefix}run_params["redirect_to_new_buffer"] = 1
+    echomsg "Output will be redirected to a new buffer."
+    call {s:plugin}UpdateMenusEnableState()
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the availability of a "RunWithArgs" function for the current file
+" type.
+"
+" Return value:
+" Zero if no "RunWithArgs" function is available for the current file type, non
+" zero otherwise.
+function {s:script}#RunWithArgsAvail()
+    return &filetype != "" && exists("*" . s:plugin . {s:plugin}FileType()
+                \ . "RunWithArgs")
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Identical to perfitys#RunWithArgsAvail except that the "RunWithArgs" command
+" must have been run at least once to get a non zero return value.
+"
+" Return value:
+" Zero if no "RunWithArgs" function is available for the current file type or
+" if it is available but has not been run yet, non zero otherwise.
+function {s:script}#RunAgainWithArgsAvail()
+    let l:ret = 0
+    if exists("b:" . s:prefix . "run_params")
+        let l:d_shallow_copy = copy(b:{s:prefix}run_params)
+        call filter(l:d_shallow_copy, 'v:key ==# "run_count"')
+        if !empty(l:d_shallow_copy)
+            let l:ret = {s:script}#RunWithArgsAvail()
+                        \ && b:{s:prefix}run_params["run_count"] > 0
+        endif
+    endif
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Runs the current file if (example for the sh file type) function
+" PerfitysShRunWithArgs exists.
+"
+" Return value:
+" 0
+function {s:script}#RunWithArgs(...)
+
+    " Check the argument.
+    if a:0 > 1
+        throw "Zero or one argument expected"
+    elseif a:0 == 1 && !{s:plugin}IsInteger(a:1)
+        throw "Integer argument expected"
+    endif
+
+    let l:file_type = {s:plugin}FileType()
+    if {s:script}#RunWithArgsAvail()
+        try
+            call {s:plugin}{l:file_type}RunWithArgs(a:0 == 1 ? a:1 : 0)
+        catch
+            throw v:exception
+        endtry
+        call {s:plugin}UpdateMenusEnableState()
+    else
+        echohl WarningMsg
+        echo "Not applicable to files of type " . &filetype
+        echohl None
+    endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Runs the current file with the same arguments as the last time if (example
+" for the sh file type) function PerfitysShRunWithArgs exists. If the current
+" file has not been run yet, then this function behaves like
+" perfitys#RunWithArgs.
+"
+" Return value:
+" 0
+function {s:script}#RunAgainWithArgs()
+    call {s:script}#RunWithArgs({s:script}#RunAgainWithArgsAvail())
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " For any integer argument greater than 1 and lower than or equal to the number
 " of line in the current buffer, returns the text of the line with number equal
 " to the argument minus 1. For other integer values, returns an empty string.
