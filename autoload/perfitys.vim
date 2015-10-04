@@ -33,6 +33,47 @@ let s:prim_sep_default_dic = {
 
 " -----------------------------------------------------------------------------
 
+" Checks that the argument is a dictionary.
+"
+" Arguments:
+"
+" #1 - d
+" Anything.
+"
+" Return value:
+" Non-zero if d is a dictionary, zero otherwise.
+function s:IsDict(d)
+    return type(a:d) == type({})
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks that the dictionary given as first argument has at least the keys
+" given in the second argument (as a list of strings).
+"
+" Arguments:
+"
+" #1 - d
+" A dictionary.
+"
+" #2 - expected_keys
+" A list of strings.
+"
+" Return value:
+" Non zero if the dictionary has at least the keys given in the list, zero
+" otherwise.
+function s:KeyMatch(d, expected_keys)
+    let l:match_count = 0
+    for key in keys(a:d)
+        if index(a:expected_keys, key) != -1
+            let l:match_count += 1
+        endif
+    endfor
+    return l:match_count == len(a:expected_keys)
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Checks that the argument is a dictionary containing a valid comment leader
 " and a valid comment trailer. See in file ftplugin/c_perfitys.vim the
 " statement:
@@ -48,19 +89,13 @@ let s:prim_sep_default_dic = {
 " Non-zero if d is a dictionary containing a valid comment leader and a valid
 " comment trailer, zero otherwise.
 function s:IsCommentDict(d)
-    let l:ret = type(a:d) == type({})
+    let l:ret = s:IsDict(a:d)
     if l:ret
         let l:expected_keys = [
                     \ 'leader',
                     \ 'trailer',
                     \ ]
-        let l:match_count = 0
-        for key in keys(a:d)
-            if index(l:expected_keys, key) != -1
-                let l:match_count += 1
-            endif
-        endfor
-        let l:ret = l:match_count == len(l:expected_keys)
+        let l:ret = s:KeyMatch(a:d, l:expected_keys)
     endif
     if l:ret
         let l:ret = type(a:d['leader']) == type("")
@@ -85,7 +120,7 @@ endfunction
 " Non-zero if d is a dictionary containing valid parameters for a separator
 " line, zero otherwise.
 function s:IsSepDict(d)
-    let l:ret = type(a:d) == type({})
+    let l:ret = s:IsDict(a:d)
     if l:ret
         let l:expected_keys = [
                     \ 'indent_level',
@@ -96,13 +131,7 @@ function s:IsSepDict(d)
                     \ 'empty_lines_above',
                     \ 'empty_lines_below',
                     \ ]
-        let l:match_count = 0
-        for key in keys(a:d)
-            if index(l:expected_keys, key) != -1
-                let l:match_count += 1
-            endif
-        endfor
-        let l:ret = l:match_count == len(l:expected_keys)
+        let l:ret = s:KeyMatch(a:d, l:expected_keys)
     endif
     if l:ret
         let l:ret = type(a:d['indent_level']) == type(0)
@@ -473,7 +502,7 @@ endfunction
 function s:FirstDictKey(d)
 
     " Check the argument.
-    if type(a:d) != type({})
+    if !s:IsDict(a:d)
         throw "Dictionary expected"
     elseif empty(a:d)
         throw "Argument must be a non-empty directory"
@@ -501,7 +530,7 @@ endfunction
 function s:FirstDictVal(d)
 
     " Check the argument.
-    if type(a:d) != type({})
+    if !s:IsDict(a:d)
         throw "Dictionary expected"
     elseif empty(a:d)
         throw "Argument must be a non-empty dictionary"
@@ -543,7 +572,7 @@ endfunction
 function s:FindAltFileType(d, filetype)
 
     " Check the arguments.
-    if type(a:d) != type({}) || type(a:filetype) != type("")
+    if !s:IsDict(a:d) || type(a:filetype) != type("")
         throw "Wrong type for at least one argument"
     elseif a:filetype == ""
         throw "File type argument must not be an empty string"
@@ -587,7 +616,7 @@ endfunction
 function s:CheckedAltFileType(d, filetype)
 
     " Check the argument.
-    if type(a:d) != type({}) || type(a:filetype) != type("")
+    if !s:IsDict(a:d) || type(a:filetype) != type("")
         throw "Wrong type for at least one argument"
     elseif a:filetype == ""
         throw "File type argument must not be an empty string"
