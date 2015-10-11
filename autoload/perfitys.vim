@@ -152,7 +152,10 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks that the argument is a dictionary.
+" Checks that the argument is a dictionary containing valid parameters for the
+" "vimgrep in quickfix" function. See in file ftplugin/vim_perfitys.vim the
+" statement: call {s:plugin}SetLocal("vimgrepinqf_params", ...
+" for an example of such a dictionary.
 "
 " Arguments:
 "
@@ -160,9 +163,26 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if d is a dictionary, zero otherwise.
-function s:IsDict(d)
-    return type(a:d) == type({})
+" Non-zero if d is a dictionary containing valid parameters for the "vimgrep in
+" quickfix" function, zero otherwise.
+function s:IsVimgrepInQFDict(d)
+    let l:ret = s:IsDict(a:d)
+    if l:ret
+        let l:expected_keys = [
+                    \ 'reg_exp',
+                    \ 'file',
+                    \ 'min_cwd_depth',
+                    \ 'relative_to_home',
+                    \ ]
+        let l:ret = s:KeyMatch(a:d, l:expected_keys)
+    endif
+    if l:ret
+        let l:ret = type(a:d['reg_exp']) == type("")
+        let l:ret = l:ret && type(a:d['file']) == type("")
+        let l:ret = l:ret && type(a:d['min_cwd_depth']) == type(0)
+        let l:ret = l:ret && type(a:d['relative_to_home']) == type(0)
+    endif
+    return l:ret
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -962,6 +982,97 @@ function {s:script}#IsEndOfLineComment(s)
                 \ {'leader': "", 'trailer': ""}, function("s:IsCommentDict"))
 
     return a:s =~# '^\s*' . l:comment["leader"]
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the applicability of the perfitys#VimgrepInQf function for the
+" current buffer.
+"
+" Return value:
+" Zero if the perfitys#VimgrepInQf function is not applicable to the current
+" buffer, nonzero if it *may* run without error.
+function {s:script}#VimgrepInQFAvail()
+    return exists("b:" . s:prefix . "vimgrepinqf_params")
+                \ && s:IsVimgrepInQFDict(b:{s:prefix}vimgrepinqf_params)
+                \ && b:{s:prefix}vimgrepinqf_params['reg_exp'] != ""
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Executes a vimgrep command and opens the quickfix window. The vimgrep command
+" is made of the information found in b:perfitys_vimgrepinqf_params.
+"
+" b:perfitys_vimgrepinqf_params is supposed to be a dictionary with the
+" following keys:
+" - reg_exp: Regular expression to be used in the vimgrep command;
+" - file: File(s) to grep (can be something like **/*.vim);
+" - min_cwd_depth: A current directory depth threshold. If the current
+"   directory is not deep enough, the function will abort. This has been
+"   implemented to minimize the risk of starting a recursive greping that would
+"   last very long.
+" - relative_to_home: non zero to interpret the directory the directory depth
+"   threshold relative to the user's home directory.
+"
+" Return value:
+" 0
+function {s:script}#VimgrepInQF()
+
+    let l:args = {s:plugin}GetLocal("vimgrepinqf_params", {
+                \ 'reg_exp': '',
+                \ 'file': '',
+                \ 'min_cwd_depth': 0,
+                \ 'relative_to_home': 1,
+                \ }, function("s:IsVimgrepInQFDict"))
+
+    let l:cwd = getcwd()
+    let l:reduced_cwd = fnamemodify(l:cwd, ':~')
+    let l:cwd_is_below_home = l:reduced_cwd !=# l:cwd
+    let l:reduced_cwd = substitute(l:reduced_cwd, '^\~', '', "")
+    let l:temporary = ""
+    let l:depth = -1
+    while l:temporary !=# l:reduced_cwd
+        let l:temporary = l:reduced_cwd
+        let l:reduced_cwd = fnamemodify(l:reduced_cwd, ':h')
+        let l:depth += 1
+    endwhile
+
+    let l:msg = ""
+    if l:args['reg_exp'] == ""
+        let l:msg = "Empty regular expression"
+    elseif l:args['file'] == ""
+        let l:msg = "No file"
+    elseif l:args['relative_to_home'] && !l:cwd_is_below_home
+        let l:msg = "Current directory is not below your home directory"
+    elseif l:depth < l:args['min_cwd_depth']
+        let l:msg = "Insufficient directory depth"
+    endif
+
+    if l:msg == ""
+
+        " Store the number of the current window.
+        let l:cur_win=winnr()
+
+        try
+            execute "vimgrep /" . l:args['reg_exp'] . "/j " . l:args['file']
+        catch
+            echohl WarningMsg
+            echo "No match"
+            echohl None
+        endtry
+
+        " Open the quickfix window if the vimgrep command above has yield
+        " results.
+        execute "cwindow"
+
+        " Select back the original window.
+        execute l:cur_win. "wincmd w"
+    else
+        echohl WarningMsg
+        echo l:msg
+        echohl None
+    endif
 
 endfunction
 

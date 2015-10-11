@@ -184,6 +184,13 @@ call {s:plugin}SetLocal("reg_exp", {
 
 call {s:plugin}SetFoldingMethod("expr")
 
+call {s:plugin}SetLocal("vimgrepinqf_params", {
+            \ 'reg_exp': '\(^fu\(nction\)!\? \)\|\(^let \)',
+            \ 'file': '**/*.vim',
+            \ 'min_cwd_depth': 2,
+            \ 'relative_to_home': 1,
+            \ })
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
