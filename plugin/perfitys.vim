@@ -52,8 +52,8 @@ let s:added_menus_list = []
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a valid identifier for a plugin related
-" parameter, zero otherwise.
+" Nonzero if the argument is a valid identifier for a plugin related parameter,
+" zero otherwise.
 function {s:plugin}IsParamIdent(s)
     return type(a:s) == type("") && a:s =~# '^[a-z][a-z0-9]*\(_[a-z0-9]\+\)*$'
 endfunction
@@ -68,7 +68,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a valid identifier for a plugin related function,
+" Nonzero if the argument is a valid identifier for a plugin related function,
 " zero otherwise.
 function {s:plugin}IsFuncIdent(s)
     return type(a:s) == type("") && a:s =~# '^[A-Z][A-Za-z0-9]*$'
@@ -84,7 +84,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is an integer, zero otherwise.
+" Nonzero if the argument is an integer, zero otherwise.
 function {s:plugin}IsInteger(x)
     return type(a:x) == type(0)
 endfunction
@@ -99,7 +99,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a non-negative integer, zero otherwise.
+" Nonzero if the argument is a non-negative integer, zero otherwise.
 function {s:plugin}IsNatural(x)
     return {s:plugin}IsInteger(a:x) && a:x >= 0
 endfunction
@@ -114,7 +114,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a strictly positive integer, zero otherwise.
+" Nonzero if the argument is a strictly positive integer, zero otherwise.
 function {s:plugin}IsPositive(x)
     return {s:plugin}IsInteger(a:x) && a:x > 0
 endfunction
@@ -129,7 +129,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a non-empty string, zero otherwise.
+" Nonzero if the argument is a non-empty string, zero otherwise.
 function {s:plugin}IsNonEmptyString(s)
     return type(a:s) == type("") && strlen(a:s) > 0
 endfunction
@@ -144,7 +144,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if the argument is a string, zero otherwise.
+" Nonzero if the argument is a string, zero otherwise.
 function {s:plugin}IsString(s)
     return type(a:s) == type("")
 endfunction
@@ -159,7 +159,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if s is one of "expandtab", "et", "noexpandtab", or "noet".
+" Nonzero if s is one of "expandtab", "et", "noexpandtab", or "noet".
 function {s:plugin}IsExpandTabValue(s)
     return type(a:s) == type("")
                 \ && (a:s =~# '^\(no\)\?et$' || a:s =~# '^\(no\)\?expandtab$')
@@ -175,7 +175,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if s is one of "manual", "indent", "expr", "marker", "syntax" or
+" Nonzero if s is one of "manual", "indent", "expr", "marker", "syntax" or
 " "diff".
 function {s:plugin}IsFoldingMethodValue(s)
     let l:ValidValues
@@ -200,7 +200,7 @@ endfunction
 " Optional part of the variable identifier.
 "
 " Return value:
-" Non-zero if the global variable exists, zero otherwise.
+" Nonzero if the global variable exists, zero otherwise.
 function {s:plugin}ExistsAsGlobal(ident, ...)
 
     " Check the arguments.
@@ -229,7 +229,7 @@ endfunction
 
 " Returns the value of a global variable. Designed to be only used after a call
 " to the function {s:plugin}ExistsAsGlobal (with exactly the same arguments)
-" that has returned a non-zero value. Use in any other condition is
+" that has returned a nonzero value. Use in any other condition is
 " inappropriate.
 "
 " Arguments:
@@ -268,7 +268,7 @@ endfunction
 " - an exception being thrown if g:perfitys_foo exists and the len function
 "   applied to it returns zero,
 " - or g:x being set to the value of g:perfitys_foo if this variable exists and
-"   the len function applied to it returns a non-zero value,
+"   the len function applied to it returns a nonzero value,
 " - or an exception being thrown if the len function applied to "bar" returns
 "   zero,
 " - or g:x being set to "bar".
@@ -280,11 +280,11 @@ endfunction
 " - an exception being thrown if g:perfitys_common_foo exists and the len
 "   function applied to it returns zero,
 " - or g:x being set to the value of g:perfitys_common_foo if this variable
-"   exists and the len function applied to it returns a non-zero value,
+"   exists and the len function applied to it returns a nonzero value,
 " - an exception being thrown if g:perfitys_sh_foo exists and the len function
 "   applied to it returns zero,
 " - or g:x being set to the value of g:perfitys_sh_foo if this variable exists
-"   and the len function applied to it returns a non-zero value,
+"   and the len function applied to it returns a nonzero value,
 " - or an exception being thrown if the len function applied to "bar" returns
 "   zero,
 " - or g:x being set to "bar".
@@ -303,7 +303,7 @@ endfunction
 " #4 (or #3) if the optional argument is absent)
 " Reference (funcref) to a function designed to check the value of the plugin
 " related parameter (function("len") in the examples). This function must
-" return a non-zero value if the value of the plugin related parameter is valid
+" return a nonzero value if the value of the plugin related parameter is valid
 " and zero otherwise.
 "
 " Return value:
@@ -367,7 +367,7 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks whether a global variable exists and is set to a non-zero value. The
+" Checks whether a global variable exists and is set to a nonzero value. The
 " name of the variable is "g:" followed by s:prefix ("perfitys_") followed by
 " the function argument.
 "
@@ -377,7 +377,7 @@ endfunction
 " Variable identifier without the "g:perfitys_" prefix.
 "
 " Return value:
-" Non-zero if the variable exists and is non-zero.
+" Nonzero if the variable exists and is nonzero.
 function {s:plugin}GlobalFlag(ident)
 
     " Check the argument.
@@ -434,7 +434,7 @@ endfunction
 "
 " #3 - IsValid
 " Reference (funcref) to a function designed to check the value of the plugin
-" related parameter. This function must return a non-zero value if the value of
+" related parameter. This function must return a nonzero value if the value of
 " the plugin related parameter is valid and zero otherwise.
 "
 " Return value:
@@ -515,7 +515,7 @@ endfunction
 " The value is the sum of the "width" and "colorcolumn_relative_to_width"
 " arguments. If a variable named "g:perfitys_colorcolumn_relative_to_width"
 " exists, then the value of this variable is used instead. Finally, if the
-" global variable "g:perfitys_do_not_set_colorcolumn" exists and is non-zero,
+" global variable "g:perfitys_do_not_set_colorcolumn" exists and is nonzero,
 " then the colorcolumn option is not affected.
 "
 " Arguments:

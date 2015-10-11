@@ -41,7 +41,7 @@ let s:prim_sep_default_dic = {
 " Anything.
 "
 " Return value:
-" Non-zero if d is a dictionary, zero otherwise.
+" Nonzero if d is a dictionary, zero otherwise.
 function s:IsDict(d)
     return type(a:d) == type({})
 endfunction
@@ -60,7 +60,7 @@ endfunction
 " A list of strings.
 "
 " Return value:
-" Non zero if the dictionary has at least the keys given in the list, zero
+" Nonzero if the dictionary has at least the keys given in the list, zero
 " otherwise.
 function s:KeyMatch(d, expected_keys)
     let l:match_count = 0
@@ -86,7 +86,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if d is a dictionary containing a valid comment leader and a valid
+" Nonzero if d is a dictionary containing a valid comment leader and a valid
 " comment trailer, zero otherwise.
 function s:IsCommentDict(d)
     let l:ret = s:IsDict(a:d)
@@ -117,7 +117,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if d is a dictionary containing valid parameters for a separator
+" Nonzero if d is a dictionary containing valid parameters for a separator
 " line, zero otherwise.
 function s:IsSepDict(d)
     let l:ret = s:IsDict(a:d)
@@ -163,7 +163,7 @@ endfunction
 " Anything.
 "
 " Return value:
-" Non-zero if d is a dictionary containing valid parameters for the "vimgrep in
+" Nonzero if d is a dictionary containing valid parameters for the "vimgrep in
 " quickfix" function, zero otherwise.
 function s:IsVimgrepInQFDict(d)
     let l:ret = s:IsDict(a:d)
@@ -271,7 +271,7 @@ endfunction
 " Any string.
 "
 " Return value:
-" Non-zero if the string matches the regular expression returned by
+" Nonzero if the string matches the regular expression returned by
 " s:SepRegExp(s:prim_sep_default_dic).
 function {s:script}#MatchesPrimSep(s)
     return a:s =~# s:SepRegExp(s:prim_sep_default_dic)
@@ -657,7 +657,7 @@ endfunction
 " Checks the availability of an alternative file type.
 "
 " Return value:
-" Zero if no alternative file type is available, non-zero otherwise.
+" Zero if no alternative file type is available, nonzero otherwise.
 function {s:script}#AltFileTypeAvail()
     if &filetype != ""
         let l:alt_filetype_dict = {s:plugin}Get("alt_filetype", {
@@ -708,7 +708,7 @@ endfunction
 " for the current file type and is on.
 "
 " Return value:
-" Zero if the option is not available or is off, non zero otherwise.
+" Zero if the option is not available or is off, nonzero otherwise.
 function {s:script}#RedirectOutputAvailAndOn()
     let l:ret = 0
     if exists("b:" . s:prefix . "run_params")
@@ -778,8 +778,8 @@ endfunction
 " type.
 "
 " Return value:
-" Zero if no "RunWithArgs" function is available for the current file type, non
-" zero otherwise.
+" Zero if no "RunWithArgs" function is available for the current file type,
+" nonzero otherwise.
 function {s:script}#RunWithArgsAvail()
     return &filetype != "" && exists("*" . s:plugin . {s:plugin}FileType()
                 \ . "RunWithArgs")
@@ -960,7 +960,7 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Returns a non-zero value if the argument is an end of line comment line, zero
+" Returns a nonzero value if the argument is an end of line comment line, zero
 " othrerwise.
 "
 " Arguments:
