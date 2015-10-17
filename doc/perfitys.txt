@@ -365,9 +365,10 @@ menu. It runs a |vimgrep| command and opens the |quickfix-window| if the
 A key mapping is also defined: <Leader>QF
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your |vimrc| file: >
 
         map <Leader>ZZ <Plug>PerfitysVimgrepInQF
+<
 
 The function is applicable if a buffer local variable exists with the name
 b:perfitys_vimgrepinqf_params and this variable is a dictionary with the
@@ -388,6 +389,28 @@ By default, Perfitys defines such a dictionary for a few file types:
 
 min_cwd_depth is set to 2 and relative_to_home to 1.
 
+                                                        *:MakeQFTaller*
+                                                        *:MakeQFSmaller*
+Some functions are provided to change the height of the quickfix window. They
+can be operated using the :MakeQFTaller and :MakeQFSmaller commands or using
+the Plugin | Perfitys menu.
+
+Key mappings are also defined: <Leader>+ and <Leader>-
+
+To change the mappings add lines like the following in your |vimrc| file: >
+
+        map <Leader>ZZ <Plug>PerfitysMakeQFTaller
+<
+
+                                                *perfitys_qfheightstep*
+                                                *g:perfitys_qfheightstep*
+By default, the height of the quickfix window changes by steps of three lines.
+You can force the step to a different value (say 6) by adding the following
+line in your |vimrc| file: >
+        let g:perfitys_qfheightstep = 6
+
+<
+
 ----------------------------------------------
 5.2 Running the current file                    *perfitys-run-current-file*
 
@@ -399,9 +422,10 @@ command, or using the Plugin | Perfitys menu.
 A key mapping is also defined: F8
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your |vimrc| file: >
 
         map <Leader>ZZ <Plug>PerfitysRunWithArgs
+<
 
 The function lets the user type the arguments (separated by spaces) to be used
 and then runs the currently edited files with those arguments.
@@ -414,9 +438,10 @@ command, or using the Plugin | Perfitys menu.
 A key mapping is also defined: F9
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your |vimrc| file: >
 
         map <Leader>ZZ <Plug>PerfitysRunAgainWithArgs
+<
 
                                         *:RedirectOutputToNewBuffer*
                                         *:DoNotRedirectOutputToNewBuffer*
@@ -428,18 +453,19 @@ The command is available in the Plugin | Perfitys menu and a key mapping is
 defined: <Leader>RR
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your |vimrc| file: >
 
         map <Leader>ZZ <Plug>PerfitysRedirectOutputToNewBuffer
-
+<
 
 You can revert to the default behavior using the
 :DoNotRedirectOutputToNewBuffer. The key mapping is: <Leader>RN
 
 You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file:
+to your |vimrc| file: >
 
         map <Leader>ZZ <Plug>PerfitysDoNotRedirectOutputToNewBuffer
+<
 
 Running the current file is currently applicable to the files of type:
 sh

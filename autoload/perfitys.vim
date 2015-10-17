@@ -1089,6 +1089,121 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Zero if the quickfix window is not opened, number of the quickfix window
+" otherwise.
+"
+" Return value:
+" Zero if the quickfix window is not opened, number of the quickfix window
+" otherwise.
+function {s:script}#QFWinNr()
+
+    " Store the number of the current window.
+    let l:cur_win = winnr()
+
+    " Store the number of the last window.
+    let l:last_win = winnr('$')
+
+    " Move to each windows until the file type of the buffer in the window is
+    " "qf" (which means that the window is probably the quickfix window).
+    let l:k = 0
+    let l:qf_found = 0
+    while l:k < l:last_win
+        let l:k += 1
+        execute l:k . "wincmd w"
+        if &filetype ==# "qf"
+            let l:qf_found = 1
+            break
+        endif
+    endwhile
+
+    " Select back the original window.
+    execute l:cur_win. "wincmd w"
+
+    return l:qf_found ? l:k : 0
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Changes the height of the quickfix window. If the argument is the string
+" "taller", then the height of the quickfix window is made higher. If the
+" argument is the string "smaller", then the height of the quickfix window is
+" made lower.
+"
+" The height his changed by the value found in variable g:perfitys_qfheightstep
+" or 3 if this variable does not exist. If it exists, the variable must be
+" greater than 0.
+"
+" If the quickfix window, does not exist, issues a warning messsage.
+"
+" Arguments:
+"
+" #1 - tallerorsmaller
+" "taller" or "smaller".
+"
+" Return value:
+" 0
+function s:ChangeQFHeight(tallerorsmaller)
+
+    " Check the arguments.
+    if a:tallerorsmaller !=# "taller" && a:tallerorsmaller !=# "smaller"
+        throw 'Invalid argument: "taller" or "smaller" expected'
+    endif
+
+    let l:step = {s:plugin}Get("qfheightstep", 3,
+                \ function(s:plugin . "IsPositive"))
+
+    let l:qfnr = {s:script}#QFWinNr()
+    if l:qfnr > 0
+        " The quickfix window is opened.
+
+        " Store the number of the current window.
+        let l:cur_win = winnr()
+
+        " Move to the quickfix window.
+        execute l:qfnr . "wincmd w"
+
+        " Get the height of the window.
+        let l:h = winheight(0)
+
+        " Change the height of the window.
+        if a:tallerorsmaller ==# "taller"
+            let l:h += l:step
+        else
+            let l:h = max([l:step, l:h - l:step])
+        endif
+        execute l:h . "wincmd _"
+
+        " Select back the original window.
+        execute l:cur_win. "wincmd w"
+    else
+        call s:Warning("Quickfix window not opened")
+    endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Increases the height of the quickfix window by calling
+" s:ChangeQFHeight("taller").
+"
+" Return value:
+" 0
+function {s:script}#MakeQFTaller()
+    call s:ChangeQFHeight("taller")
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Reduces the height of the quickfix window by calling
+" s:ChangeQFHeight("smaller").
+"
+" Return value:
+" 0
+function {s:script}#MakeQFSmaller()
+    call s:ChangeQFHeight("smaller")
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
