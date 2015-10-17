@@ -33,6 +33,23 @@ let s:prim_sep_default_dic = {
 
 " -----------------------------------------------------------------------------
 
+" Issues a warning message.
+"
+" Arguments:
+"
+" #1 - msg
+" Any string.
+"
+" Return value:
+" 0
+function s:Warning(msg)
+    echohl WarningMsg
+    echo a:msg
+    echohl None
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Checks that the argument is a dictionary.
 "
 " Arguments:
@@ -698,7 +715,7 @@ function {s:script}#AltFileType()
         endif
         echomsg "Option filetype is now set to " . &filetype . l:unchged . "."
     else
-        echohl WarningMsg | echo "No file type detected" | echohl None
+        call s:Warning("No file type detected")
     endif
 endfunction
 
@@ -831,9 +848,7 @@ function {s:script}#RunWithArgs(...)
         endtry
         call {s:plugin}UpdateMenusEnableState()
     else
-        echohl WarningMsg
-        echo "Not applicable to files of type " . &filetype
-        echohl None
+        call s:Warning("Not applicable to files of type " . &filetype)
     endif
 endfunction
 
@@ -1052,14 +1067,12 @@ function {s:script}#VimgrepInQF()
     if l:msg == ""
 
         " Store the number of the current window.
-        let l:cur_win=winnr()
+        let l:cur_win = winnr()
 
         try
             execute "vimgrep /" . l:args['reg_exp'] . "/j " . l:args['file']
         catch
-            echohl WarningMsg
-            echo "No match"
-            echohl None
+            call s:Warning("No match")
         endtry
 
         " Open the quickfix window if the vimgrep command above has yield
@@ -1069,9 +1082,7 @@ function {s:script}#VimgrepInQF()
         " Select back the original window.
         execute l:cur_win. "wincmd w"
     else
-        echohl WarningMsg
-        echo l:msg
-        echohl None
+        call s:Warning(l:msg)
     endif
 
 endfunction
