@@ -60,22 +60,6 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks that the argument is a valid identifier for a plugin related function.
-"
-" Arguments:
-"
-" #1 - s
-" Anything.
-"
-" Return value:
-" Nonzero if the argument is a valid identifier for a plugin related function,
-" zero otherwise.
-function {s:plugin}IsFuncIdent(s)
-    return type(a:s) == type("") && a:s =~# '^[A-Z][A-Za-z0-9]*$'
-endfunction
-
-" -----------------------------------------------------------------------------
-
 " Checks that the argument is an integer.
 "
 " Arguments:
@@ -706,12 +690,6 @@ endfunction
 " Return value:
 " Full name of the plugin related autoloaded function.
 function s:AutoloadFuncFullName(func)
-
-    " Check the arguments
-    if !{s:plugin}IsFuncIdent(a:func)
-        throw "Invalid function identifier"
-    endif
-
     return s:script . "#" . a:func
 endfunction
 
@@ -730,14 +708,6 @@ endfunction
 " Return value:
 " 0
 function s:DefineMapToAutoloadFunc(func, map)
-
-    " Check the arguments
-    if !{s:plugin}IsFuncIdent(a:func)
-        throw "Invalid function identifier"
-    elseif !{s:plugin}IsNonEmptyString(a:map)
-        throw "Map must be a non-empty string"
-    endif
-
     if !hasmapto('<Plug>' . s:plugin . a:func)
         execute "map <silent> <unique> " . a:map .
                     \ " <Plug>" . s:plugin . a:func
@@ -766,14 +736,6 @@ endfunction
 " Return value:
 " 0
 function s:DefineCommandForAutoloadFunc(func, ...)
-
-    " Check the arguments
-    if !{s:plugin}IsFuncIdent(a:func)
-        throw "Invalid function identifier"
-    elseif a:0 == 1 && !{s:plugin}IsNonEmptyString(a:1)
-        throw "Invalid command name"
-    endif
-
     let a:name = a:0 == 1 ? a:1 : a:func
     if !exists(":" . a:name)
         execute "command " . a:name . " :call "
@@ -797,16 +759,6 @@ endfunction
 " Return value:
 " 0
 function s:DefineMenuForAutoloadFunc(func, menu_entry, AvailabilityFunc)
-
-    " Check the arguments.
-    if !{s:plugin}IsFuncIdent(a:func)
-        throw "Invalid function identifier"
-    elseif !{s:plugin}IsNonEmptyString(a:menu_entry)
-        throw "Invalid menu entry"
-    elseif !empty(a:AvailabilityFunc)
-                \ && type(a:AvailabilityFunc) != type(function("tr"))
-        throw "Third argument must be a funcref or an empty string"
-    endif
 
     let l:full_menu_entry = escape(s:plugin_menu . "." . s:plugin . "."
                 \ . a:menu_entry, ' ')

@@ -310,11 +310,6 @@ endfunction
 " Separator line.
 function s:Sep(sep)
 
-    " Check the argument.
-    if !s:IsSepDict(a:sep)
-        throw "Invalid separator line dictionary"
-    endif
-
     let l:comment = {s:plugin}GetLocal("comment", {'leader': "", 'trailer': ""},
                 \ function("s:IsCommentDict"))
 
@@ -361,11 +356,6 @@ endfunction
 " Return value:
 " Regular expression that separator lines match.
 function s:SepRegExp(sep)
-
-    " Check the argument.
-    if !s:IsSepDict(a:sep)
-        throw "Invalid separator line dictionary"
-    endif
 
     let l:comment = {s:plugin}GetLocal("comment", {'leader': "", 'trailer': ""},
                 \ function("s:IsCommentDict"))
@@ -425,13 +415,6 @@ endfunction
 " 0
 function s:PutLineAndCollapse(s, reg_exp)
 
-    " Check the arguments.
-    if (type(a:s) != type("") && type(a:s) != type(0))
-                \ || (type(a:reg_exp) != type("")
-                \ && type(a:reg_exp) != type(0))
-        throw "Wrong type for at least one argument"
-    endif
-
     put=a:s
     let l:line_num = line('.')
 
@@ -478,14 +461,6 @@ endfunction
 " 0
 function s:PutBelow(s, ...)
 
-    " Check the arguments.
-    if (type(a:s) != type("") && type(a:s) != type(0))
-                \ || (a:0 == 1 && type(a:1) != type(0))
-        throw "Wrong type for at least one argument"
-    elseif a:0 > 1
-        throw "Too many arguments"
-    endif
-
     for k in range(a:0 == 1 ? a:1 : 1)
         put=a:s
         normal! k
@@ -510,14 +485,6 @@ endfunction
 " 0
 function s:PutAbove(s, ...)
 
-    " Check the arguments.
-    if (type(a:s) != type("") && type(a:s) != type(0))
-                \ || (a:0 == 1 && type(a:1) != type(0))
-        throw "Wrong type for at least one argument"
-    elseif a:0 > 1
-        throw "Too many arguments"
-    endif
-
     for k in range(a:0 == 1 ? a:1 : 1)
         put!=a:s
         normal! j
@@ -537,13 +504,6 @@ endfunction
 " Return value:
 " First key found in the dictionary given as argument.
 function s:FirstDictKey(d)
-
-    " Check the argument.
-    if !s:IsDict(a:d)
-        throw "Dictionary expected"
-    elseif empty(a:d)
-        throw "Argument must be a non-empty directory"
-    endif
 
     for [key, value] in items(a:d)
         let l:ret = key
@@ -565,13 +525,6 @@ endfunction
 " Return value:
 " First value found in the dictionary given as argument.
 function s:FirstDictVal(d)
-
-    " Check the argument.
-    if !s:IsDict(a:d)
-        throw "Dictionary expected"
-    elseif empty(a:d)
-        throw "Argument must be a non-empty dictionary"
-    endif
 
     for [key, value] in items(a:d)
         if type(value) != type("")
@@ -607,13 +560,6 @@ endfunction
 " Return value:
 " String, might be empty.
 function s:FindAltFileType(d, filetype)
-
-    " Check the arguments.
-    if !s:IsDict(a:d) || type(a:filetype) != type("")
-        throw "Wrong type for at least one argument"
-    elseif a:filetype == ""
-        throw "File type argument must not be an empty string"
-    endif
 
     let l:d_shallow_copy_1 = copy(a:d)
     call filter(l:d_shallow_copy_1, 'v:key ==# a:filetype')
@@ -651,13 +597,6 @@ endfunction
 " Return value:
 " Non empty string.
 function s:CheckedAltFileType(d, filetype)
-
-    " Check the argument.
-    if !s:IsDict(a:d) || type(a:filetype) != type("")
-        throw "Wrong type for at least one argument"
-    elseif a:filetype == ""
-        throw "File type argument must not be an empty string"
-    endif
 
     let l:ret = s:FindAltFileType(a:d, a:filetype)
     if empty(l:ret)
@@ -1143,11 +1082,6 @@ endfunction
 " Return value:
 " 0
 function s:ChangeQFHeight(tallerorsmaller)
-
-    " Check the arguments.
-    if a:tallerorsmaller !=# "taller" && a:tallerorsmaller !=# "smaller"
-        throw 'Invalid argument: "taller" or "smaller" expected'
-    endif
 
     let l:step = {s:plugin}Get("qfheightstep", 3,
                 \ function(s:plugin . "IsPositive"))
