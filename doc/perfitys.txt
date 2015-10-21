@@ -385,6 +385,7 @@ By default, Perfitys defines such a dictionary for a few file types:
 
 | File type | reg_exp                       | file     |
 |---------- + ----------------------------- + ---------|
+| matlab    | ^[^%]*\<function\>\s*\w       | **/*.m   |
 | vim       | ^\s*fu\(nction\)\?!\?\s*\S\+( | **/*.vim |
 
 min_cwd_depth is set to 2 and relative_to_home to 1.
