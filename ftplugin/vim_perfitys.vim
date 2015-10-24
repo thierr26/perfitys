@@ -184,7 +184,7 @@ call {s:plugin}SetLocal("reg_exp", {
 call {s:plugin}SetFoldingMethod("expr")
 
 call {s:plugin}SetLocal("vimgrepinqf_params", {
-            \ 'reg_exp': '\(^fu\(nction\)!\? \)\|\(^let \)',
+            \ 'reg_exp': '\(^\s*fu\(nction\)\?!\?\s\)\|\(^\s*let\s\)',
             \ 'file': '**/*.vim',
             \ 'min_cwd_depth': 2,
             \ 'relative_to_home': 1,
