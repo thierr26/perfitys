@@ -176,7 +176,6 @@ call {s:plugin}SetTabPreferences(4, "expandtab")
 call {s:plugin}ConfigEndOfLineComment('"')
 
 " Define a dictionary of file type specific regular expressions.
-let s:name_reg_exp = '[A-Za-z0-9_-]\+'
 call {s:plugin}SetLocal("reg_exp", {
             \ 'function_leader': '^\s*fu\(nction\)\?!\?\s*\S\+(',
             \ 'arg_check_leader_comment': 'Check the argument',
