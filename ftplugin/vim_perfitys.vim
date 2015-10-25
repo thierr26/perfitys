@@ -136,8 +136,6 @@ function! {s:plugin}{s:file_type}FoldText()
     let l:ret = ""
     let l:k = v:foldstart
     let l:sep_found = 0
-    let l:here_doc_leader_found = 0
-    let l:here_doc = ""
     while l:k < v:foldend && l:ret == ""
 
         let l:l = getline(l:k)
