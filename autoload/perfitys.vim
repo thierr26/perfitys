@@ -31,6 +31,16 @@ let s:prim_sep_default_dic = {
             \ 'empty_lines_below': 1,
             \}
 
+let s:second_sep_default_dic = {
+            \ 'indent_level': 0,
+            \ 'post_comment_leader_space': " ",
+            \ 'repeating_sequence': "-",
+            \ 'length': &textwidth - 20,
+            \ 'pre_comment_trailer_space': " ",
+            \ 'empty_lines_above': 1,
+            \ 'empty_lines_below': 1,
+            \ }
+
 " -----------------------------------------------------------------------------
 
 " Issues a warning message.
@@ -263,15 +273,8 @@ endfunction
 function {s:script}#SecondSep()
 
     let l:ident = "second_sep"
-    let l:local_sep = {s:plugin}GetLocal(l:ident, {
-                \ 'indent_level': 0,
-                \ 'post_comment_leader_space': " ",
-                \ 'repeating_sequence': "-",
-                \ 'length': &textwidth - 20,
-                \ 'pre_comment_trailer_space': " ",
-                \ 'empty_lines_above': 1,
-                \ 'empty_lines_below': 1,
-                \ }, function("s:IsSepDict"))
+    let l:local_sep = {s:plugin}GetLocal(l:ident, s:second_sep_default_dic,
+                \ function("s:IsSepDict"))
 
     call s:PutSep({s:plugin}Get(l:ident, &filetype, l:local_sep,
                 \ function("s:IsSepDict")))
@@ -279,7 +282,24 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks that the string given as argument "looks like" a primary separator
+" Checks that the string given as argument looks like a primary separator line.
+"
+" Arguments
+"
+" #1 - s
+" Any string.
+"
+" Return value:
+" Nonzero if the string given as argument looks like a primary separator line.
+function {s:script}#MatchesPrimSep(s)
+    return a:s =~# s:SepRegExp(
+                \ {s:plugin}GetLocal("prim_sep", s:prim_sep_default_dic,
+                \ function("s:IsSepDict")))
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks that the string given as argument looks like a secondary separator
 " line.
 "
 " Arguments
@@ -288,10 +308,12 @@ endfunction
 " Any string.
 "
 " Return value:
-" Nonzero if the string matches the regular expression returned by
-" s:SepRegExp(s:prim_sep_default_dic).
-function {s:script}#MatchesPrimSep(s)
-    return a:s =~# s:SepRegExp(s:prim_sep_default_dic)
+" Nonzero if the string given as argument looks like a secondary separator
+" line.
+function {s:script}#MatchesSecondSep(s)
+    return a:s =~# s:SepRegExp(
+                \ {s:plugin}GetLocal("second_sep", s:second_sep_default_dic,
+                \ function("s:IsSepDict")))
 endfunction
 
 " -----------------------------------------------------------------------------
