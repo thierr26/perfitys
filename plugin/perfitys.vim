@@ -781,7 +781,7 @@ function s:DefineMenuForAutoloadFunc(func, menu_entry, AvailabilityFunc)
     let l:full_menu_entry = escape(s:plugin_menu . "." . s:plugin . "."
                 \ . a:menu_entry, ' ')
 
-    execute "noremenu <script> " . l:full_menu_entry
+    execute "noremenu <silent> <script> " . l:full_menu_entry
                 \ . " :call " . s:AutoloadFuncFullName(a:func) . "()<CR>"
 
     " Add the newly created menu to a list, along with the availability
