@@ -636,6 +636,24 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Sets the foldmethod option for a specific file type to the value of the
+" "method" argument, unless a variable named for example like
+" "g:perfitys_sh_foldmethod" exists (if &filetype is "sh").
+"
+" Additionally, sets the foldexpr and foldtext options if the foldmethod option
+" is "expr". By default they are set to "PerfitysShFoldLevel(v:lnum)"
+" (respectively "PerfitysShFoldText") if those functions exist (if &filetype is
+" "sh"). Those default values can be supersede with variables like
+" g:perfitys_sh_foldexpr (respectively g:perfitys_sh_foldtext). If no default
+" exist, the options are set to "0" (respectively "foldtext()").
+"
+" Arguments:
+"
+" #1 - method
+" Value for the foldmethod option.
+"
+" Return value:
+" 0
 function {s:plugin}SetFoldingMethod(method)
 
     " Check the argument.
