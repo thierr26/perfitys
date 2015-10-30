@@ -32,7 +32,8 @@ supported. But support for other file types can easily be added.
 6. Automatic typing
         6.1. Primary separator
         6.2. Secondary separator
-7. Credits and licensing
+7. Re-sourcing of filetype plugins
+8. Credits and licensing
 
 ==============================================================================
 1. Installation
@@ -567,7 +568,23 @@ to apply the look to files of type "sh" only, or
 to apply the look to all file types.
 
 ==============================================================================
-7. Credits and licensing
+7. Re-sourcing of filetype plugins
+
+
+In some circumstances, you might want to re-apply the Perfitys filetype plugin
+to a buffer. It is possible using the :SourceFTPlugin command, or using the
+Plugin | Perfitys menu.
+
+The key mapping is: <Leader>SP
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your vimrc file: >
+
+        map <Leader>ZZ <Plug>PerfitysSourceFTPlugin
+
+
+==============================================================================
+8. Credits and licensing
 
 Author: Thierry Rascle (thierr26@free.fr)
 

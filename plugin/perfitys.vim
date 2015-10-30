@@ -860,6 +860,12 @@ let g:{s:script}_enabled = 1
 
 " Define maps, commands and menus.
 
+call s:DefineMapCommandAndMenu("SourceFTPlugin", "<Leader>SP",
+            \ "Source filetype plugin",
+            \ function(s:AutoloadFuncFullName("FTPluginAvail")))
+
+call s:InsertMenuSeparator()
+
 call s:DefineMapCommandAndMenu("PrimSep", "<Leader>SS",
             \ "Insert Primary Separator Line", "")
 call s:DefineMapCommandAndMenu("SecondSep", "<Leader>S",

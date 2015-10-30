@@ -18,23 +18,24 @@ existing default settings modified.
 The file type support is far from complete. Only a few file types are
 supported. But support for other file types can easily be added.
 
-1. Installation                 |perfitys-install|
-2. Supported file types         |perfitys-supported-file-types|
-3. Disabling the plugin         |perfitys-disabling|
-4. Per file type settings       |perfitys-per-file-type-settings|
+1. Installation                         |perfitys-install|
+2. Supported file types                 |perfitys-supported-file-types|
+3. Disabling the plugin                 |perfitys-disabling|
+4. Per file type settings               |perfitys-per-file-type-settings|
         4.1. Text width                         |perfitys-textwidth|
         4.2. Tab preferences                    |perfitys-tab|
         4.3. Alternative file type              |perfitys-alt-filetype|
         4.4. "End of line" comment              |perfitys-eol-comment|
         4.5. Bullet-lists                       |perfitys-bullet-lists|
         4.6. Folding method                     |perfitys-fold-method|
-5. IDE features                 |perfitys-ide|
+5. IDE features                         |perfitys-ide|
         5.1. Population of the quickfix window  |perfitys-populate-quickfix|
         5.2. Running the current file           |perfitys-run-current-file|
-6. Automatic typing             |perfitys-automatic-typing|
+6. Automatic typing                     |perfitys-automatic-typing|
         6.1. Primary separator                  |perfitys-primary-separator|
         6.2. Secondary separator                |perfitys-secondary-separator|
-7. Credits and licensing        |perfitys-credits|
+7. Re-sourcing of filetype plugins      |perfitys-ftplugin-sourcing|
+8. Credits and licensing                |perfitys-credits|
 
 ==============================================================================
 1. Installation                                         *perfitys-install*
@@ -586,7 +587,23 @@ to apply the look to files of type "sh" only, or >
 to apply the look to all file types.
 
 ==============================================================================
-7. Credits and licensing                        *perfitys-credits*
+7. Re-sourcing of filetype plugins              *perfitys-ftplugin-sourcing*
+
+                                                        *SourceFTPlugin*
+In some circumstances, you might want to re-apply the Perfitys filetype plugin
+to a buffer. It is possible using the :SourceFTPlugin command, or using the
+Plugin | Perfitys menu.
+
+The key mapping is: <Leader>SP
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your |vimrc| file: >
+
+        map <Leader>ZZ <Plug>PerfitysSourceFTPlugin
+<
+
+==============================================================================
+8. Credits and licensing                        *perfitys-credits*
 
 Author: Thierry Rascle (thierr26@free.fr)
 

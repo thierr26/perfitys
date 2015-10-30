@@ -1160,6 +1160,89 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Returns the output of the scriptnames Vim command.
+"
+" Return value:
+" Output of the scriptnames Vim command.
+function s:ScriptNames()
+    redir => l:script_names
+    silent scriptnames
+    redir END
+    return l:script_names
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Returns a regular expression that the file name of the Perfitys filetype
+" plugin for the file type of the current buffer matches.
+"
+" Return value:
+" Regular expression.
+function s:FTPluginRegExp()
+    return '\W' . s:script . '\Wftplugin\W' . &filetype . '_' . s:script
+                \ . '\.vim'
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks whether the Perfitys filetype plugin for the file type of the current
+" buffer has been loaded or not.
+"
+" Return value:
+" 0 if the filetype plugin has not been loaded, otherwise return value of
+" match() for the regular expression returned by s:FTPluginRegExp on the output
+" of the scriptnames command.
+function {s:script}#FTPluginAvail()
+    return max([0, match(s:ScriptNames(), s:FTPluginRegExp()
+                \ . '[' . nr2char(10) . nr2char(13) . ']')])
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Sources the Perfitys filetype plugin for the current buffer.
+"
+" Return value:
+" 0
+function {s:script}#SourceFTPlugin()
+
+    let l:n = {s:script}#FTPluginAvail()
+    if l:n == 0
+        call s:Warning("Unable to source the Perfitys filetype plugin")
+    endif
+
+    " Get the file name of the Perfitys filetype plugin.
+    let l:script_names = s:ScriptNames()
+
+    let l:p = l:n
+    while l:p > 0 && l:script_names[l:p] != ":"
+        let l:p -= 1
+    endwhile
+    let l:p += 1
+
+    let l:q = l:n
+    while l:q < len(l:script_names)
+                \ && l:script_names[l:q] != nr2char(10)
+                \ && l:script_names[l:q] != nr2char(13)
+        let l:q += 1
+    endwhile
+    let l:q -= 1
+
+    let l:f = substitute(l:script_names[l:p : l:q], '^\s*', '', '')
+    let l:f = substitute(l:f, '\s*$', '', '')
+
+    " Delete the b:did_ftplugin flag if it exists (necessary to allow the
+    " filetype plugin to run completely).
+    if exists("b:did_ftplugin")
+        unlet b:did_ftplugin
+    endif
+
+    " Source the filetype plugin.
+    execute "source ". l:f
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
