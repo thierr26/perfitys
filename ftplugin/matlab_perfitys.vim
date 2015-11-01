@@ -156,7 +156,7 @@ call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(4, "expandtab")
 
 let s:comment_leader = "%"
-let s:second_sep_repeating_sequence = " -"
+let s:second_sep_repeating_sequence = "- "
 
 call {s:plugin}ConfigEndOfLineComment(s:comment_leader)
 
