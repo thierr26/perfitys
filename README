@@ -87,6 +87,7 @@ haskell
 help
 html
 matlab
+octave
 php
 sh
 text
@@ -131,12 +132,12 @@ file:
 The 'textwidth' option is set by Perfitys depending on the file type. The
 default settings are as follows:
 
-| File type                        | 'textwidth' option value |
-|----------------------------------+--------------------------|
-| ada, c, conf, css, haskell, html | 79                       |
-| gitcommit                        | 72                       |
-| help, text                       | 78                       |
-| matlab, php, sh, vim, xdefaults  | 79                       |
+| File type                               | 'textwidth' option value |
+|-----------------------------------------+--------------------------|
+| ada, c, conf, css, haskell, html        | 79                       |
+| gitcommit                               | 72                       |
+| help, text                              | 78                       |
+| matlab, octave, php, sh, vim, xdefaults | 79                       |
 
 The default settings can be overwritten by setting global variables in your
 vimrc file. For example, if you want a text width of 80 for the sh file type,
@@ -179,16 +180,16 @@ following line to your vimrc file:
 The 'tabstop', 'shiftwidth' and 'softtabstop' are set by Perfitys depending on
 the file type. The default settings are as follows:
 
-| File type     | 'tabstop', 'shiftwidth' and 'softtabstop' options value |
-|---------------+---------------------------------------------------------|
-| ada           | 3                                                       |
-| c, conf, css  | 4                                                       |
-| gitcommit     | 4                                                       |
-| haskell, html | 4                                                       |
-| matlab        | 4                                                       |
-| php, sh, vim  | 4                                                       |
-| help, text    | 8                                                       |
-| xdefaults     | 4                                                       |
+| File type      | 'tabstop', 'shiftwidth' and 'softtabstop' options value |
+|----------------+---------------------------------------------------------|
+| ada            | 3                                                       |
+| c, conf, css   | 4                                                       |
+| gitcommit      | 4                                                       |
+| haskell, html  | 4                                                       |
+| matlab, octave | 4                                                       |
+| php, sh, vim   | 4                                                       |
+| help, text     | 8                                                       |
+| xdefaults      | 4                                                       |
 
 The default settings can be overwritten by setting global variables to your
 vimrc file. For example, if you want a tab width of 8 for the sh file type,
@@ -301,10 +302,10 @@ be leaders for bullet-list items.
 The 'foldmethod' option is set or not set by Perfitys, depending on the file
 type. The default settings are as follows:
 
-| File type        | 'foldmethod' option value             |
-|------------------+---------------------------------------|
-| sh, vim          | expr                                  |
-| other file types | 'foldmethod' not affected by Perfitys |
+| File type               | 'foldmethod' option value |
+|-------------------------+---------------------------|
+| matlab, octave, sh, vim | expr                      |
+| other file types        | manual                    |
 
 The default settings can be overwritten by setting global variables in your
 vimrc file. For example, if you want 'foldmethod' set to indent for the sh
@@ -374,10 +375,10 @@ following keys:
 
 By default, Perfitys defines such a dictionary for a few file types:
 
-| File type | reg_exp                       | file     |
-|-----------+-------------------------------+----------|
-| matlab    | ^[^%]*\<function\>\s*\w       | **/*.m   |
-| vim       | ^\s*fu\(nction\)\?!\?\s*\S\+( | **/*.vim |
+| File type      | reg_exp                       | file     |
+|----------------+-------------------------------+----------|
+| matlab, octave | ^[^%]*\<function\>\s*\w       | **/*.m   |
+| vim            | ^\s*fu\(nction\)\?!\?\s*\S\+( | **/*.vim |
 
 min_cwd_depth is set to 2 and relative_to_home to 1.
 
