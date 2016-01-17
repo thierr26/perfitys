@@ -78,9 +78,6 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
     " Get the text of the line with the number given as argument.
     let l:l = getline(a:lnum)
 
-    " Get the text of the previous line.
-    let l:l1 = {s:main_script}#GetPreviousLine(a:lnum)
-
     " Move the cursor to the start of the line with the number given as
     " argument.
     call cursor(a:lnum, 1)
@@ -88,12 +85,6 @@ function! {s:plugin}{s:file_type}FoldLevel(lnum)
     " Move the cursor to a non empty line if current line is empty.
     let l:first_non_empty = {s:main_script}#NextNonEmptyLine()
 
-    " echo l:first_non_empty
-    " echo b:{s:main_script}_reg_exp["function_leader"]
-    " echo l:first_non_empty =~# b:{s:main_script}_reg_exp["function_leader"]
-    " echo {s:main_script}#MatchesSecondSep(l:first_non_empty)
-    " echo {s:main_script}#NextNonEmptyNonEndOfLineCommentLine()
-    " echo getline('.') =~# b:{s:main_script}_reg_exp["function_leader"]
     if l:first_non_empty =~# b:{s:main_script}_reg_exp["function_leader"]
                 \ || ({s:main_script}#MatchesSecondSep(l:first_non_empty)
                 \ && {s:main_script}#NextNonEmptyNonEndOfLineCommentLine() >= 0

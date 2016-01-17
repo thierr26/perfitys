@@ -29,7 +29,7 @@ let s:prim_sep_default_dic = {
             \ 'pre_comment_trailer_space': " ",
             \ 'empty_lines_above': 1,
             \ 'empty_lines_below': 1,
-            \}
+            \ }
 
 let s:second_sep_default_dic = {
             \ 'indent_level': 0,
