@@ -334,7 +334,7 @@ You can see the behavior of Perfitys by downloading and opening the following
 files:
 
 pull_vim_plugins from this repository:
-https://github.com/thierr26/thierr26_vim-gtk_config/blob/master/
+https://github.com/thierr26/thierr26_vim-gtk_config
 
 plugin/perfitys.vim from this repository:
 https://github.com/thierr26/perfitys
