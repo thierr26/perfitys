@@ -82,6 +82,7 @@ ada
 c
 conf
 css
+dosbatch
 gitcommit
 haskell
 help
@@ -132,12 +133,12 @@ file:
 The 'textwidth' option is set by Perfitys depending on the file type. The
 default settings are as follows:
 
-| File type                               | 'textwidth' option value |
-|-----------------------------------------+--------------------------|
-| ada, c, conf, css, haskell, html        | 79                       |
-| gitcommit                               | 72                       |
-| help, text                              | 78                       |
-| matlab, octave, php, sh, vim, xdefaults | 79                       |
+| File type                                  | 'textwidth' option value |
+|--------------------------------------------+--------------------------|
+| ada, c, conf, css, dosbatch, haskell, html | 79                       |
+| gitcommit                                  | 72                       |
+| help, text                                 | 78                       |
+| matlab, octave, php, sh, vim, xdefaults    | 79                       |
 
 The default settings can be overwritten by setting global variables in your
 vimrc file. For example, if you want a text width of 80 for the sh file type,
@@ -184,6 +185,7 @@ the file type. The default settings are as follows:
 |----------------+---------------------------------------------------------|
 | ada            | 3                                                       |
 | c, conf, css   | 4                                                       |
+| dosbatch       | 4                                                       |
 | gitcommit      | 4                                                       |
 | haskell, html  | 4                                                       |
 | matlab, octave | 4                                                       |
