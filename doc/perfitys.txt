@@ -93,6 +93,7 @@ matlab
 octave
 php
 sh
+texinfo
 text
 vim
 xdefaults
@@ -142,6 +143,7 @@ default settings are as follows:
 | gitcommit                                  | 72                       |
 | help, text                                 | 78                       |
 | matlab, octave, php, sh, vim, xdefaults    | 79                       |
+| texinfo                                    | 76                       |
 
 The default settings can be overwritten by setting global variables in your
 |vimrc| file. For example, if you want a text width of 80 for the sh file
@@ -195,6 +197,7 @@ the file type. The default settings are as follows:
 | matlab, octave | 4                                                       |
 | php, sh, vim   | 4                                                       |
 | help, text     | 8                                                       |
+| texinfo        | 4                                                       |
 | xdefaults      | 4                                                       |
 
 The default settings can be overwritten by setting global variables in your
