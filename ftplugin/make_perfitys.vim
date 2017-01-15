@@ -47,7 +47,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 call {s:plugin}SetTextWidth(79, 2)
-call {s:plugin}SetTabPreferences(4, "expandtab")
+call {s:plugin}SetTabPreferences(4, "noexpandtab")
 
 call {s:plugin}ConfigEndOfLineComment("#")
 
