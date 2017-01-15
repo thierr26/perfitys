@@ -20,6 +20,9 @@ let s:main_script = substitute(s:script, '^[^_]\+_', '', "")
 " Compute the plugin name (with the first letter capitalized).
 let s:plugin = substitute(s:main_script, "^.", '\=toupper(submatch(0))', "")
 
+" Compute the file type with the first letter capitalized.
+let s:file_type = {s:plugin}FileType()
+
 if !exists("g:" . s:main_script . "_enabled")
     " The general enable flag for the plugin has not been set by the
     " plugin/perfitys.vim script.
@@ -45,6 +48,87 @@ let s:save_cpo = &cpo
 
 " Set cpoptions to its Vim default.
 set cpo&vim
+
+" -----------------------------------------------------------------------------
+
+" Runs a gprbuild command to check the syntax of the current file. User must
+" make sure that there is a default GNAT project file in the current directory.
+" It can be a default.gpr file or any .gpr file it is the only .gpr file in the
+" current directory.
+"
+" The gprbuild command is "gprbuild -p -q -f -c -gnats -u " followed by the
+" name of the current file.
+"
+" Return value:
+" Exit status of the gprbuild command
+function! {s:plugin}{s:file_type}CheckSyntax()
+
+    let l:file_name = expand('%')
+    if l:file_name == ""
+        throw "No file name"
+    endif
+
+    let l:command = "gprbuild -p -q -f -c -gnats -u " . l:file_name
+    let l:vim_ex_cmd = "!" . l:command
+    execute l:vim_ex_cmd
+    return v:shell_error
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Runs a gprbuild command to check the semantic of the current file. User must
+" make sure that there is a default GNAT project file in the current directory.
+" It can be a default.gpr file or any .gpr file it is the only .gpr file in the
+" current directory.
+"
+" The gprbuild command is "gprbuild -p -q -f -c -gnatc -u " followed by the
+" name of the current file.
+"
+" Return value:
+" Exit status of the gprbuild command
+function! {s:plugin}{s:file_type}CheckSemantic()
+
+    let l:file_name = expand('%')
+    if l:file_name == ""
+        throw "No file name"
+    endif
+
+    let l:command = "gprbuild -p -q -f -c -gnatc -u " . l:file_name
+    let l:vim_ex_cmd = "!" . l:command
+    execute l:vim_ex_cmd
+    return v:shell_error
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Runs a gprbuild command to build a program from the current file. User must
+" make sure that there is a default GNAT project file in the current directory.
+" It can be a default.gpr file or any .gpr file it is the only .gpr file in the
+" current directory.
+"
+" The gprbuild command is "gprbuild -p " followed by the name of the current
+" file.
+"
+" Return value:
+" Exit status of the gprbuild command
+function! {s:plugin}{s:file_type}Build()
+
+    let l:file_name = expand('%')
+    if l:file_name == ""
+        throw "No file name"
+    endif
+
+    let l:command = "gprbuild -p " . l:file_name
+    let l:vim_ex_cmd = "!" . l:command
+    execute l:vim_ex_cmd
+    return v:shell_error
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
 
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(3, "expandtab")

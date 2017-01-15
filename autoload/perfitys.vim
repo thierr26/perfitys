@@ -786,6 +786,45 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Checks the availability of a "CheckSyntax" function for the current file
+" type.
+"
+" Return value:
+" Zero if no "CheckSyntax" function is available for the current file type,
+" nonzero otherwise.
+function {s:script}#CheckSyntaxAvail()
+    return &filetype != "" && expand('%:e') != "gpr" &&
+                \ exists("*" . s:plugin . {s:plugin}FileType() . "CheckSyntax")
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the availability of a "CheckSemantic" function for the current file
+" type.
+"
+" Return value:
+" Zero if no "CheckSemantic" function is available for the current file type,
+" nonzero otherwise.
+function {s:script}#CheckSemanticAvail()
+    return &filetype != "" && expand('%:e') != "gpr" &&
+                \ exists("*" . s:plugin . {s:plugin}FileType()
+                \ . "CheckSemantic")
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the availability of a "Build" function for the current file type.
+"
+" Return value:
+" Zero if no "Build" function is available for the current file type, nonzero
+" otherwise.
+function {s:script}#BuildAvail()
+    return &filetype != "" && expand('%:e') == "adb" &&
+                \ exists("*" . s:plugin . {s:plugin}FileType() . "Build")
+endfunction
+
+" -----------------------------------------------------------------------------
+
 " Runs the current file if (example for the sh file type) function
 " PerfitysShRunWithArgs exists.
 "
@@ -824,6 +863,74 @@ endfunction
 " 0
 function {s:script}#RunAgainWithArgs()
     call {s:script}#RunWithArgs({s:script}#RunAgainWithArgsAvail())
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the syntax of the current file if (example for the ada file type)
+" function PerfitysAdaCheckSyntax exists.
+"
+" Return value:
+" 0
+function {s:script}#CheckSyntax()
+
+    let l:file_type = {s:plugin}FileType()
+    if {s:script}#CheckSyntaxAvail()
+        try
+            call {s:plugin}{l:file_type}CheckSyntax()
+        catch
+            throw v:exception
+        endtry
+        call {s:plugin}UpdateMenusEnableState()
+    else
+        call s:Warning("Applicable to files of type " . &filetype
+                    \ . " (except .gpr files)")
+    endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Checks the semantic of the current file if (example for the ada file type)
+" function PerfitysAdaCheckSemantic exists.
+"
+" Return value:
+" 0
+function {s:script}#CheckSemantic()
+
+    let l:file_type = {s:plugin}FileType()
+    if {s:script}#CheckSemanticAvail()
+        try
+            call {s:plugin}{l:file_type}CheckSemantic()
+        catch
+            throw v:exception
+        endtry
+        call {s:plugin}UpdateMenusEnableState()
+    else
+        call s:Warning("Applicable to files of type " . &filetype
+                    \ . " (except .gpr files)")
+    endif
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Builds a program from the current file if (example for the ada file type)
+" function PerfitysAdaBuild exists.
+"
+" Return value:
+" 0
+function {s:script}#Build()
+
+    let l:file_type = {s:plugin}FileType()
+    if {s:script}#BuildAvail()
+        try
+            call {s:plugin}{l:file_type}Build()
+        catch
+            throw v:exception
+        endtry
+        call {s:plugin}UpdateMenusEnableState()
+    else
+        call s:Warning("Applicable to .adb files")
+    endif
 endfunction
 
 " -----------------------------------------------------------------------------
