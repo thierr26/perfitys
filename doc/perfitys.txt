@@ -89,6 +89,7 @@ gitcommit
 haskell
 help
 html
+make
 matlab
 octave
 php
@@ -137,13 +138,13 @@ file type only (say the "sh" file type), add the following line to your
 The 'textwidth' option is set by Perfitys depending on the file type. The
 default settings are as follows:
 
-| File type                                  | 'textwidth' option value |
-|------------------------------------------- + -------------------------|
-| ada, c, conf, css, dosbatch, haskell, html | 79                       |
-| gitcommit                                  | 72                       |
-| help, text                                 | 78                       |
-| matlab, octave, php, sh, vim, xdefaults    | 79                       |
-| texinfo                                    | 76                       |
+| File type                                     | 'textwidth' option value |
+|---------------------------------------------- + -------------------------|
+| ada, c, conf, css, dosbatch, haskell, html    | 79                       |
+| gitcommit                                     | 72                       |
+| help, text                                    | 78                       |
+| make, matlab, octave, php, sh, vim, xdefaults | 79                       |
+| texinfo                                       | 76                       |
 
 The default settings can be overwritten by setting global variables in your
 |vimrc| file. For example, if you want a text width of 80 for the sh file
@@ -194,6 +195,7 @@ the file type. The default settings are as follows:
 | dosbatch       | 4                                                       |
 | gitcommit      | 4                                                       |
 | haskell, html  | 4                                                       |
+| make           | 4                                                       |
 | matlab, octave | 4                                                       |
 | php, sh, vim   | 4                                                       |
 | help, text     | 8                                                       |
