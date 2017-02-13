@@ -32,6 +32,7 @@ supported. But support for other file types can easily be added.
         5.1. Population of the quickfix window  |perfitys-populate-quickfix|
         5.2. Running the current file           |perfitys-run-current-file|
         5.3. Compiling the current Ada file     |perfitys-compile-ada-file|
+        5.4. Issuing a "make" command           |perfitys-issue-make|
 6. Automatic typing                     |perfitys-automatic-typing|
         6.1. Primary separator                  |perfitys-primary-separator|
         6.2. Secondary separator                |perfitys-secondary-separator|
@@ -423,7 +424,7 @@ line in your |vimrc| file: >
 <
 
 ----------------------------------------------
-5.2 Running the current file                    *perfitys-run-current-file*
+5.2. Running the current file                   *perfitys-run-current-file*
 
                                                         *:RunWithArgs*
 Perfitys provides a function to run the currently edited file with user
@@ -483,7 +484,7 @@ sh
 
 
 ----------------------------------------------
-5.3 Compiling the current Ada file              *perfitys-compile-ada-file*
+5.3. Compiling the current Ada file             *perfitys-compile-ada-file*
 
                                                 *perfitys-check-ada-syntax*
 Perfitys provides functions to apply various gprbuild commands the current
@@ -519,6 +520,18 @@ A key mapping is also defined: F12
 The gprbuild command is "gprbuild -p " followed by the name of the current
 file.
 
+
+----------------------------------------------
+5.4. Issuing a "make" command                   *perfitys-compile-ada-file*
+
+Perfitys provides a function to issue a make command. It is currently
+applicable to the "ada" file type and is exclusive of the function to run the
+currently edited file (|perfitys-run-current-file|) because it is actually the
+same function (:RunWithArgs). The same key mappings are defined (F8 and F9).
+
+Note that the function may be used to issue any command. When prompted for
+arguments to the make command, just erase "make" and type the command you want
+to issue.
 
 ==============================================================================
 6. Automatic typing                             *perfitys-automatic-typing*

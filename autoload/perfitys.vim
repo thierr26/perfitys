@@ -770,10 +770,12 @@ endfunction
 "
 " Return value:
 " Zero if no "RunWithArgs" function is available for the current file type or
-" if it is available but has not been run yet, non zero otherwise.
+" if it is available but has not been run yet (if this can be determined), non
+" zero otherwise.
 function {s:script}#RunAgainWithArgsAvail()
     let l:ret = 0
     if exists("b:" . s:prefix . "run_params")
+        let l:ret = 1
         let l:d_shallow_copy = copy(b:{s:prefix}run_params)
         call filter(l:d_shallow_copy, 'v:key ==# "run_count"')
         if !empty(l:d_shallow_copy)
