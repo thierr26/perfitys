@@ -171,6 +171,57 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Default Perfitys fold level function for the file type. Used if the fold
+" method for the file type is set to "expr" and if the user has not defined its
+" own fold expression. For more information, see:
+" - :help foldmethod
+" - :help fold-expr
+" - :help perfitys-foldmethod
+"
+" Arguments:
+"
+" #1 - lnum
+" Any integer, supposed to be a buffer line number.
+"
+" Return value:
+" Fold level.
+function! {s:plugin}{s:file_type}FoldLevel(lnum)
+
+    " Save the current cursor position.
+    let l:cur_pos = getpos('.')
+
+    " Initialize the return value.
+    let l:ret = "="
+
+    " Get the text of the line with the number given as argument.
+    let l:l = getline(a:lnum)
+
+    " Move the cursor to the start of the line with the number given as
+    " argument.
+    call cursor(a:lnum, 1)
+
+    " Move the cursor to a non empty line if current line is empty.
+    let l:first_non_empty = {s:main_script}#NextNonEmptyLine()
+
+    if {s:main_script}#IsEndOfLineComment(l:first_non_empty)
+        " The line with the number given as argument is the beginning of (or an
+        " empty line preceding the beginning of) a comment block and we want to
+        " fold such blocks.
+        let l:ret = 1
+    elseif l:l != "" && !{s:main_script}#IsEndOfLineComment(l:l)
+        " The line with the number given as argument is neither an empty line
+        " nor an end of line comment, and we don't want to fold such lines.
+        let l:ret = 0
+    endif
+
+    " Restore the cursor position.
+    call setpos('.', l:cur_pos)
+
+    return l:ret
+endfunction
+
+" -----------------------------------------------------------------------------
+
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(3, "expandtab")
 
@@ -195,7 +246,7 @@ call {s:plugin}SetLocal("second_sep", {
             \ 'empty_lines_below': 1,
             \ })
 
-call {s:plugin}SetFoldingMethod("manual")
+call {s:plugin}SetFoldingMethod("expr")
 
 call {s:plugin}SetLocal("run_params", {
             \ 'arguments': "make ",
