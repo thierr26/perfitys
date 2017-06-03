@@ -222,6 +222,19 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
+" Perfitys fold text function for the file type, automatically activated if the
+" Perfitys default fold level function for the file type is selected.
+" For more information on fold text, see:
+" - :help fold-foldtext
+"
+" Return value:
+" Empty string.
+function! {s:plugin}{s:file_type}FoldText()
+    return ""
+endfunction
+
+" -----------------------------------------------------------------------------
+
 call {s:plugin}SetTextWidth(79, 2)
 call {s:plugin}SetTabPreferences(3, "expandtab")
 
