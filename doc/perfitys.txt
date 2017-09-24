@@ -316,10 +316,13 @@ be leaders for bullet-list items.
 The 'foldmethod' option is set or not set by Perfitys, depending on the file
 type. The default settings are as follows:
 
-| File type               | 'foldmethod' option value |
-|------------------------ + --------------------------|
-| matlab, octave, sh, vim | expr                      |
-| other file types        | manual                    |
+| File type      | 'foldmethod' option value |
+|--------------- + --------------------------|
+| all file types | manual                    |
+
+Note that the 'foldmethod' option used to be set to "expr" by Perfitys for a
+few file types (ada, vim, sh, octave, matlab), but this degraded Vim
+performance a lot.
 
 The default settings can be overwritten by setting global variables in your
 |vimrc| file. For example, if you want 'foldmethod' set to indent for the sh

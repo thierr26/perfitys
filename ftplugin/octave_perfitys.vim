@@ -179,7 +179,7 @@ call {s:plugin}SetLocal("reg_exp", {
             \ 'function_leader': s:function_leader_reg_exp,
             \ })
 
-call {s:plugin}SetFoldingMethod("expr")
+call {s:plugin}SetFoldingMethod("manual")
 
 call {s:plugin}SetLocal("vimgrepinqf_params", {
             \ 'reg_exp': s:function_leader_reg_exp,

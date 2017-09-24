@@ -259,7 +259,7 @@ call {s:plugin}SetLocal("second_sep", {
             \ 'empty_lines_below': 1,
             \ })
 
-call {s:plugin}SetFoldingMethod("expr")
+call {s:plugin}SetFoldingMethod("manual")
 
 call {s:plugin}SetLocal("run_params", {
             \ 'arguments': "make ",

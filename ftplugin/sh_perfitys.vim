@@ -284,7 +284,7 @@ call {s:plugin}SetLocal("reg_exp", {
             \ 'here_doc_trailer': '^\s*' . s:name_reg_exp . '$',
             \ })
 
-call {s:plugin}SetFoldingMethod("expr")
+call {s:plugin}SetFoldingMethod("manual")
 
 call {s:plugin}SetLocal("run_params", {
             \ 'arguments': " ",

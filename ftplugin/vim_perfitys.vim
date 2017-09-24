@@ -179,7 +179,7 @@ call {s:plugin}SetLocal("reg_exp", {
             \ 'arg_check_leader_comment': 'Check the argument',
             \ })
 
-call {s:plugin}SetFoldingMethod("expr")
+call {s:plugin}SetFoldingMethod("manual")
 
 call {s:plugin}SetLocal("vimgrepinqf_params", {
             \ 'reg_exp': '\(^\s*fu\(nction\)\?!\?\s\)\|\(^\s*let\s\)',
