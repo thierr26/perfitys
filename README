@@ -29,7 +29,7 @@ supported. But support for other file types can easily be added.
 5. IDE features
         5.1. Population of the quickfix window
         5.2. Running the current file
-        5.3. Compiling the current Ada file
+        5.3. Compiling Ada sources
         5.4. Issuing a "make" command
 6. Automatic typing
         6.1. Primary separator
@@ -468,31 +468,30 @@ sh
 
 
 ----------------------------------------------
-5.3. Compiling the current Ada file
+5.3. Compiling Ada sources
 
 
-Perfitys provides functions to apply various gprbuild commands the current
-file if it is an Ada file. The functions work properly only if there is a
-proper default GNAT project file in the current directory. It can be a
-default.gpr file or any .gpr file if it is the only one in the current
-directory.
+Perfitys provides functions to apply various gprbuild commands if the current
+file is an Ada file. The functions work properly only if there is a proper
+default GNAT project file in the current directory. It can be a default.gpr
+file or any .gpr file if it is the only one in the current directory.
 
-The first function checks the syntax of the current file. It can be operated
-using the :CheckSyntax command, or using the Plugin | Perfitys menu.
+The first function compiles the current file. It can be operated using the
+:CompileFile command, or using the Plugin | Perfitys menu.
 
 A key mapping is also defined: F10
 
-The gprbuild command is "gprbuild -p -q -f -c -gnats -u " followed by the name
-of the current file.
+The gprbuild command is "gprbuild -p -f -c -gnatc -u " followed by the name of
+the current file.
 
 
-A second function checks the semantic of the current file. It can be operated
-using the :CheckSemantic command, or using the Plugin | Perfitys menu.
+A second function compiles all the sources for the GNAT project file. It can
+be operated using the :CompileAll command, or using the Plugin | Perfitys
+menu.
 
 A key mapping is also defined: F11
 
-The gprbuild command is "gprbuild -p -q -f -c -gnatc -u " followed by the name
-of the current file.
+The gprbuild command is "gprbuild -p -U".
 
 
 Finally, a third function compiles the current file to an executable. Note

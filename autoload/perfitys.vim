@@ -788,29 +788,29 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks the availability of a "CheckSyntax" function for the current file
+" Checks the availability of a "CompileFile" function for the current file
 " type.
 "
 " Return value:
-" Zero if no "CheckSyntax" function is available for the current file type,
+" Zero if no "CompileFile" function is available for the current file type,
 " nonzero otherwise.
-function {s:script}#CheckSyntaxAvail()
+function {s:script}#CompileFileAvail()
     return &filetype != "" && expand('%:e') != "gpr" &&
-                \ exists("*" . s:plugin . {s:plugin}FileType() . "CheckSyntax")
+                \ exists("*" . s:plugin . {s:plugin}FileType() . "CompileFile")
 endfunction
 
 " -----------------------------------------------------------------------------
 
-" Checks the availability of a "CheckSemantic" function for the current file
+" Checks the availability of a "CompileAll" function for the current file
 " type.
 "
 " Return value:
-" Zero if no "CheckSemantic" function is available for the current file type,
+" Zero if no "CompileAll" function is available for the current file type,
 " nonzero otherwise.
-function {s:script}#CheckSemanticAvail()
+function {s:script}#CompileAllAvail()
     return &filetype != "" && expand('%:e') != "gpr" &&
                 \ exists("*" . s:plugin . {s:plugin}FileType()
-                \ . "CheckSemantic")
+                \ . "CompileAll")
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -870,16 +870,16 @@ endfunction
 " -----------------------------------------------------------------------------
 
 " Checks the syntax of the current file if (example for the ada file type)
-" function PerfitysAdaCheckSyntax exists.
+" function PerfitysAdaCompileFile exists.
 "
 " Return value:
 " 0
-function {s:script}#CheckSyntax()
+function {s:script}#CompileFile()
 
     let l:file_type = {s:plugin}FileType()
-    if {s:script}#CheckSyntaxAvail()
+    if {s:script}#CompileFileAvail()
         try
-            call {s:plugin}{l:file_type}CheckSyntax()
+            call {s:plugin}{l:file_type}CompileFile()
         catch
             throw v:exception
         endtry
@@ -893,16 +893,16 @@ endfunction
 " -----------------------------------------------------------------------------
 
 " Checks the semantic of the current file if (example for the ada file type)
-" function PerfitysAdaCheckSemantic exists.
+" function PerfitysAdaCompileAll exists.
 "
 " Return value:
 " 0
-function {s:script}#CheckSemantic()
+function {s:script}#CompileAll()
 
     let l:file_type = {s:plugin}FileType()
-    if {s:script}#CheckSemanticAvail()
+    if {s:script}#CompileAllAvail()
         try
-            call {s:plugin}{l:file_type}CheckSemantic()
+            call {s:plugin}{l:file_type}CompileAll()
         catch
             throw v:exception
         endtry

@@ -61,14 +61,14 @@ set cpo&vim
 "
 " Return value:
 " Exit status of the gprbuild command
-function! {s:plugin}{s:file_type}CheckSyntax()
+function! {s:plugin}{s:file_type}CompileFile()
 
     let l:file_name = expand('%')
     if l:file_name == ""
         throw "No file name"
     endif
 
-    let l:command = "gprbuild -p -q -f -c -gnats -u " . l:file_name
+    let l:command = "gprbuild -p -f -c -gnatc -u " . l:file_name
     let l:vim_ex_cmd = "!" . l:command
     execute l:vim_ex_cmd
     return v:shell_error
@@ -77,24 +77,18 @@ endfunction
 
 " -----------------------------------------------------------------------------
 
-" Runs a gprbuild command to check the semantic of the current file. User must
-" make sure that there is a default GNAT project file in the current directory.
-" It can be a default.gpr file or any .gpr file it is the only .gpr file in the
-" current directory.
+" Runs a gprbuild command to compile all sources. User must make sure that
+" there is a default GNAT project file in the current directory. It can be a
+" default.gpr file or any .gpr file it is the only .gpr file in the current
+" directory.
 "
-" The gprbuild command is "gprbuild -p -q -f -c -gnatc -u " followed by the
-" name of the current file.
+" The gprbuild command is "gprbuild -p -U".
 "
 " Return value:
 " Exit status of the gprbuild command
-function! {s:plugin}{s:file_type}CheckSemantic()
+function! {s:plugin}{s:file_type}CompileAll()
 
-    let l:file_name = expand('%')
-    if l:file_name == ""
-        throw "No file name"
-    endif
-
-    let l:command = "gprbuild -p -q -f -c -gnatc -u " . l:file_name
+    let l:command = "gprbuild -p -U"
     let l:vim_ex_cmd = "!" . l:command
     execute l:vim_ex_cmd
     return v:shell_error

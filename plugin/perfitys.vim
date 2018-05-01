@@ -904,12 +904,12 @@ call s:DefineMapCommandAndMenu("RunWithArgs", "<F8>",
 call s:DefineMapCommandAndMenu("RunAgainWithArgs", "<F9>",
             \ "Run once more with the same arguments",
             \ function(s:AutoloadFuncFullName("RunAgainWithArgsAvail")))
-call s:DefineMapCommandAndMenu("CheckSyntax", "<F10>",
+call s:DefineMapCommandAndMenu("CompileFile", "<F10>",
             \ "Check syntax",
-            \ function(s:AutoloadFuncFullName("CheckSyntaxAvail")))
-call s:DefineMapCommandAndMenu("CheckSemantic", "<F11>",
+            \ function(s:AutoloadFuncFullName("CompileFileAvail")))
+call s:DefineMapCommandAndMenu("CompileAll", "<F11>",
             \ "Check semantic",
-            \ function(s:AutoloadFuncFullName("CheckSemanticAvail")))
+            \ function(s:AutoloadFuncFullName("CompileAllAvail")))
 call s:DefineMapCommandAndMenu("Build", "<F12>",
             \ "Build",
             \ function(s:AutoloadFuncFullName("BuildAvail")))
