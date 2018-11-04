@@ -28,6 +28,7 @@ supported. But support for other file types can easily be added.
         4.4. "End of line" comment              |perfitys-eol-comment|
         4.5. Bullet-lists                       |perfitys-bullet-lists|
         4.6. Folding method                     |perfitys-fold-method|
+        4.7. Regular expression for left shift  |perfitys-left-shift|
 5. IDE features                         |perfitys-ide|
         5.1. Population of the quickfix window  |perfitys-populate-quickfix|
         5.2. Running the current file           |perfitys-run-current-file|
@@ -369,6 +370,79 @@ following line to your |vimrc| file: >
 
         let g:perfitys_do_not_set_foldmethod = 1
 <
+
+----------------------------------------------
+4.7. Regular expression for left shift          *perfitys-left-shift*
+
+                                                        *:BeginLeftShift*
+Perfitys provides a function to shift a text block to the left, by removing
+the first characters of the lines of the block according to a regular
+expression. This function can be operated using the :BeginLeftShift command,
+or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: <Leader>LL
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your |vimrc| file:
+
+        map <Leader>ZZ <Plug>PerfitysBeginLeftShift
+<
+
+For all file types except the "ada" file type, the regular expression for left
+shift is set to "^ \+" (that is one ore more spaces at the beginning of the
+line). The :BeginLeftShift command shifts to the left the current line by
+removing the leading spaces, and also shifts lines above and below the current
+line if they have the same number of leading spaces.
+
+The :BeginLeftShift command also decreases the 'textwidth' option by the
+number of leading spaces (only if this number is lower than the 'textwidth'
+option).
+
+The :BeginLeftShift command also turns syntax highlighting off in the current
+buffer.
+
+For the "ada" file type, the regular expression for left shift is set to
+"^ *--[^ ]* \+" (that is 0 or more spaces at the beginning of the line,
+followed by the Ada comment opening sequence ("--"), possibly followed by non
+space characters, followed by one or more spaces). The :BeginLeftShift command
+shifts to the left the current line by removing the part of the line matching
+the regular expression, and also shifts lines above and below the current line
+if they contain the exact same match of the regular expression.
+
+The :BeginLeftShift command also decreases the 'textwidth' option by the
+character length of the match (only if this length is lower than the
+'textwidth' option) and turns syntax highlighting off in the current buffer.
+
+The default settings can be overwritten by setting global variables in your
+|vimrc| file. For example, if you want the "^ *# \+" regular expression for
+the sh file type, add the following line to your |vimrc| file (note the
+escaping of the backslash): >
+
+        let g:perfitys_sh_left_shift_reg_exp = "^ *# \\+"
+<
+
+The point of this left shift feature is to ease the edition of text blocks
+(typically comment blocks in source code files). Usually, you don't need
+shifting to edit comment blocks easily and you can use the |gq| command to
+format the comment block, thanks to the file type plugins provided with Vim.
+But in some particular cases, |gq| does not behave as expected and shifting
+makes life easier.
+
+                                                        *:EndLeftShift*
+Of course, Perfitys provides a function to revert the shift caused by
+:BeginLeftShift. The function can be operated using the :EndLeftShift command,
+or using the Plugin | Perfitys menu.
+
+A key mapping is also defined: <Leader>L
+
+You can change this mapping (say to <Leader>ZZ) by adding the following line
+to your |vimrc| file:
+
+        map <Leader>ZZ <Plug>PerfitysEndLeftShift
+<
+
+Note that :EndLeftShift requires that you do a visual selection of the block
+before you call it.
 
 ==============================================================================
 5. IDE features                                 *perfitys-ide*

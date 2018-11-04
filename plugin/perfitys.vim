@@ -874,6 +874,15 @@ call s:DefineCommandForAutoloadFunc("PrimSep", "Sep")
 
 call s:InsertMenuSeparator()
 
+call s:DefineMapCommandAndMenu("BeginLeftShift", "<Leader>LL",
+            \ "Begin left shifted editing",
+            \ function(s:AutoloadFuncFullName("BeginLeftShiftAvail")))
+call s:DefineMapCommandAndMenu("EndLeftShift", "<Leader>L",
+            \ "End left shifted editing",
+            \ function(s:AutoloadFuncFullName("EndLeftShiftAvail")))
+
+call s:InsertMenuSeparator()
+
 call s:DefineMapCommandAndMenu("AltFileType", "<Leader>FT",
             \ "Switch to the alternative file type",
             \ function(s:AutoloadFuncFullName("AltFileTypeAvail")))

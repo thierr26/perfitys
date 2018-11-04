@@ -41,6 +41,8 @@ let s:second_sep_default_dic = {
             \ 'empty_lines_below': 1,
             \ }
 
+let s:left_shift_reg_exp_default = "^ \\+"
+
 " -----------------------------------------------------------------------------
 
 " Issues a warning message.
@@ -1046,7 +1048,7 @@ endfunction
 " -----------------------------------------------------------------------------
 
 " Returns a nonzero value if the argument is an end of line comment line, zero
-" othrerwise.
+" otherwise.
 "
 " Arguments:
 "
@@ -1067,6 +1069,177 @@ function {s:script}#IsEndOfLineComment(s)
                 \ {'leader': "", 'trailer': ""}, function("s:IsCommentDict"))
 
     return a:s =~# '^\s*' . l:comment["leader"]
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Returns a nonzero value if the argument is an end of line comment line, zero
+" otherwise.
+"
+" Arguments:
+"
+" #1 - s
+" Any string.
+"
+" #2 - reg_exp
+" Regular expression starting with start anchor ('^').
+"
+" Return value:
+" Part of the string matching the regular expression, or empty string if there
+" is no match. The part is at the beginning of the string.
+function {s:script}#GetLeftShiftMatch(s, reg_exp)
+
+    " Check the arguments.
+    if type(a:s) != type("")
+        throw "First argument must be a string"
+    elseif type(a:reg_exp) != type("") || strcharpart(a:reg_exp, 0, 1) !=# "^"
+        throw "Second argument must be a string (regular expression) "
+                    \ . "starting with '^'"
+    endif
+
+    if empty(matchstr(a:s, a:reg_exp))
+        let l:ret = ""
+    else
+        let l:ret = substitute(a:s, '\(' . a:reg_exp . '\)\(.*$\)',
+                    \ '\=submatch(1)', "")
+    endif
+
+    return l:ret
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Truthy if a "left shifted editing session" is on going, falsy otherwise.
+"
+" Return value:
+" Nonzero if a "left shifted editing session" is on going, zero otherwise.
+function {s:script}#EndLeftShiftAvail()
+
+    return exists("g:" . s:prefix . "left_shift_match")
+                \ && g:{s:prefix}left_shift_match != ""
+                \ && g:{s:prefix}left_shift_bufname ==# bufname("%")
+                \ && g:{s:prefix}left_shift_bufnr == bufnr("%")
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Falsy if a "left shifted editing session" is on going, truthy otherwise.
+"
+" Return value:
+" Zero if a "left shifted editing session" is on going, nonzero otherwise.
+function {s:script}#BeginLeftShiftAvail()
+
+    return !exists("g:" . s:prefix . "left_shift_match")
+                \ || g:{s:prefix}left_shift_match == ""
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" Start a "left shifted editing session" (shift current line and neighbor line
+" to the left according to local plugin related parameter "left_shift_reg_exp",
+" decrease the textwidth option accordingly and turn syntax highlighting off).
+"
+" Return value:
+" 0
+function {s:script}#BeginLeftShift()
+
+    if !{s:script}#BeginLeftShiftAvail()
+        throw "Function currently not available in this buffer"
+    endif
+
+    let l:left_shift_reg_exp = {s:plugin}GetLocal("left_shift_reg_exp",
+                \ s:left_shift_reg_exp_default,
+                \ function(s:plugin . "IsString"))
+    let l:left_shift_reg_exp = {s:plugin}Get("left_shift_reg_exp", &filetype,
+                \ l:left_shift_reg_exp, function(s:plugin . "IsString"))
+
+    let b:{s:prefix}left_shift_lmin = line('.')
+    let g:{s:prefix}left_shift_match
+                \ = {s:script}#GetLeftShiftMatch(
+                \ getline(b:{s:prefix}left_shift_lmin), l:left_shift_reg_exp)
+
+    if g:{s:prefix}left_shift_match == ""
+        throw "Unable to shift to the left"
+    endif
+
+    let b:{s:prefix}left_shift_lmin = b:{s:prefix}left_shift_lmin
+    while b:{s:prefix}left_shift_lmin > 1 && {s:script}#GetLeftShiftMatch(
+                \ getline(b:{s:prefix}left_shift_lmin - 1),
+                \ l:left_shift_reg_exp) ==# g:{s:prefix}left_shift_match
+        let b:{s:prefix}left_shift_lmin -= 1
+    endwhile
+
+    let b:{s:prefix}left_shift_lmax = b:{s:prefix}left_shift_lmin
+    while b:{s:prefix}left_shift_lmax < line('$')
+                \ && {s:script}#GetLeftShiftMatch(
+                \ getline(b:{s:prefix}left_shift_lmax + 1),
+                \ l:left_shift_reg_exp) ==# g:{s:prefix}left_shift_match
+        let b:{s:prefix}left_shift_lmax += 1
+    endwhile
+
+    let l:k = b:{s:prefix}left_shift_lmin
+    for l:line in getline(b:{s:prefix}left_shift_lmin,
+                \ b:{s:prefix}left_shift_lmax)
+        call setline(l:k, strcharpart(l:line,
+                    \ strchars(g:{s:prefix}left_shift_match)))
+        let l:k += 1
+    endfor
+
+    let b:{s:prefix}left_shift_amount = strchars(g:{s:prefix}left_shift_match)
+    let b:{s:prefix}left_shift_amount = b:{s:prefix}left_shift_amount
+                \ < &textwidth ? b:{s:prefix}left_shift_amount : 0
+    let &textwidth -= b:{s:prefix}left_shift_amount
+    let b:{s:prefix}left_shift_syntax_ft = &syntax
+    let g:{s:prefix}left_shift_bufname = bufname("%")
+    let g:{s:prefix}left_shift_bufnr = bufnr("%")
+    let &syntax = "off"
+
+    call {s:plugin}UpdateMenusEnableState()
+
+endfunction
+
+" -----------------------------------------------------------------------------
+
+" End a "left shifted editing session" (shift lines of the visual selection
+" back, restore the textwidth option and syntax highlighting).
+"
+" Return value:
+" 0
+function {s:script}#EndLeftShift() range
+
+    if !{s:script}#EndLeftShiftAvail()
+        throw "Function currently not available in this buffer"
+    endif
+
+    if a:firstline != b:{s:prefix}left_shift_lmin
+        if !exists("b:" . s:prefix . "left_shift_not_attempted")
+                    \ || !b:{s:prefix}left_shift_not_attempted
+            let b:{s:prefix}left_shift_not_attempted = 1
+            throw "Did not expect current visual selection. "
+                        \ . "Reselect and relaunch function"
+        endif
+    endif
+
+    let b:{s:prefix}left_shift_not_attempted = 0
+
+    let l:k = a:firstline
+    for l:line in getline(a:firstline, a:lastline)
+        call setline(l:k,substitute(l:line, '^',
+                    \ g:{s:prefix}left_shift_match, ""))
+        let l:k += 1
+    endfor
+    let &textwidth += b:{s:prefix}left_shift_amount
+    let &syntax = b:{s:prefix}left_shift_syntax_ft
+
+    let g:{s:prefix}left_shift_match = ""
+
+    call {s:plugin}UpdateMenusEnableState()
+    let g:{s:prefix}left_shift_bufname = ""
+    let g:{s:prefix}left_shift_bufnr = -1
 
 endfunction
 

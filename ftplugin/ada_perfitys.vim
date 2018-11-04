@@ -260,6 +260,8 @@ call {s:plugin}SetLocal("run_params", {
             \ 'redirect_to_new_buffer': 0,
             \ })
 
+call {s:plugin}SetLocal("left_shift_reg_exp", "^ *--[^ ]* \\+")
+
 " Restore the value of cpoptions.
 let &cpo = s:save_cpo
 
