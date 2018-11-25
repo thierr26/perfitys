@@ -606,9 +606,10 @@ file.
 5.4. Issuing a "make" command                   *perfitys-compile-ada-file*
 
 Perfitys provides a function to issue a make command. It is currently
-applicable to the "ada" file type and is exclusive of the function to run the
-currently edited file (|perfitys-run-current-file|) because it is actually the
-same function (:RunWithArgs). The same key mappings are defined (F8 and F9).
+applicable to the "ada" and "rst" file types and is exclusive of the function
+to run the currently edited file (|perfitys-run-current-file|) because it is
+actually the same function (:RunWithArgs). The same key mappings are defined
+(F8 and F9).
 
 Note that the function may be used to issue any command. When prompted for
 arguments to the make command, just erase "make" and type the command you want
