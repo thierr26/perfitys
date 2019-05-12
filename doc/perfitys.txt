@@ -98,6 +98,7 @@ octave
 php
 python
 rst
+ruby
 sh
 texinfo
 text
@@ -148,8 +149,8 @@ default settings are as follows:
 | ada, c, conf, css, dosbatch, haskell, html    | 79                       |
 | gitcommit                                     | 72                       |
 | help, text                                    | 78                       |
-| make, matlab, octave, php, python, rst, sh    | 79                       |
-| vim, xdefaults                                | 79                       |
+| make, matlab, octave, php, python, rst, ruby  | 79                       |
+| sh, vim, xdefaults                            | 79                       |
 | texinfo                                       | 76                       |
 
 The default settings can be overwritten by setting global variables in your
@@ -205,7 +206,7 @@ the file type. The default settings are as follows:
 | make           | 4                                                       |
 | matlab, octave | 4                                                       |
 | php, python    | 4                                                       |
-| sh, vim        | 4                                                       |
+| ruby, sh, vim  | 4                                                       |
 | help, text     | 8                                                       |
 | texinfo        | 4                                                       |
 | xdefaults      | 4                                                       |
