@@ -889,18 +889,6 @@ call s:DefineMapCommandAndMenu("AltFileType", "<Leader>FT",
 
 call s:InsertMenuSeparator()
 
-call s:DefineMapCommandAndMenu("VimgrepInQF", "<Leader>QF",
-            \ "Populate quickfix window with declarations",
-            \ function(s:AutoloadFuncFullName("VimgrepInQFAvail")))
-call s:DefineMapCommandAndMenu("MakeQFTaller", "<Leader>+",
-            \ "Make quickfix window taller",
-            \ function(s:AutoloadFuncFullName("QFWinNr")))
-call s:DefineMapCommandAndMenu("MakeQFSmaller", "<Leader>-",
-            \ "Make quickfix window smaller",
-            \ function(s:AutoloadFuncFullName("QFWinNr")))
-
-call s:InsertMenuSeparator()
-
 call s:DefineMapCommandAndMenu("DoNotRedirectOutputToNewBuffer", "<Leader>RN",
             \ "Don't redirect output to new buffer",
             \ function(s:AutoloadFuncFullName("RedirectOutputAvailAndOn")))

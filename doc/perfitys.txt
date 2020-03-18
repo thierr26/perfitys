@@ -30,10 +30,9 @@ supported. But support for other file types can easily be added.
         4.6. Folding method                     |perfitys-fold-method|
         4.7. Regular expression for left shift  |perfitys-left-shift|
 5. IDE features                         |perfitys-ide|
-        5.1. Population of the quickfix window  |perfitys-populate-quickfix|
-        5.2. Running the current file           |perfitys-run-current-file|
-        5.3. Compiling Ada sources              |perfitys-compile-ada-file|
-        5.4. Issuing a "make" command           |perfitys-issue-make|
+        5.1. Running the current file           |perfitys-run-current-file|
+        5.2. Compiling Ada sources              |perfitys-compile-ada-file|
+        5.3. Issuing a "make" command           |perfitys-issue-make|
 6. Automatic typing                     |perfitys-automatic-typing|
         6.1. Primary separator                  |perfitys-primary-separator|
         6.2. Secondary separator                |perfitys-secondary-separator|
@@ -448,66 +447,7 @@ before you call it.
 ==============================================================================
 5. IDE features                                 *perfitys-ide*
 
-5.1. Population of the quickfix window          *perfitys-populate-quickfix*
-
-                                                        *:VimgrepInQF*
-Perfitys provides a function to populate the |quickfix-window|. This function
-can be operated using the :VimgrepInQF command, or using the Plugin | Perfitys
-menu. It runs a |vimgrep| command and opens the |quickfix-window| if the
-|vimgrep| command has yielded results.
-
-A key mapping is also defined: <Leader>QF
-
-You can change this mapping (say to <Leader>ZZ) by adding the following line
-to your |vimrc| file: >
-
-        map <Leader>ZZ <Plug>PerfitysVimgrepInQF
-<
-
-The function is applicable if a buffer local variable exists with the name
-b:perfitys_vimgrepinqf_params and this variable is a dictionary with the
-following keys:
-- reg_exp: The regular expression to be used in the |vimgrep| command;
-- file: a string to be used as the file argument in the |vimgrep| command;
-- min_cwd_depth: a directory depth threshold (if the depth of the current
-  directory is below this threshold, then the function will abort);
-- relative_to_home: if nonzero, then the directory depth will be evaluated
-  relative to the user's home directory and the function will abort if the
-  current directory is not below the user's home directory.
-
-By default, Perfitys defines such a dictionary for a few file types:
-
-| File type         | reg_exp                       | file     |
-|------------------ + ----------------------------- + ---------|
-| matlab, octave    | ^[^%]*\<function\>\s*\w       | **/*.m   |
-| vim               | ^\s*fu\(nction\)\?!\?\s*\S\+( | **/*.vim |
-
-min_cwd_depth is set to 2 and relative_to_home to 1.
-
-                                                        *:MakeQFTaller*
-                                                        *:MakeQFSmaller*
-Some functions are provided to change the height of the quickfix window. They
-can be operated using the :MakeQFTaller and :MakeQFSmaller commands or using
-the Plugin | Perfitys menu.
-
-Key mappings are also defined: <Leader>+ and <Leader>-
-
-To change the mappings add lines like the following in your |vimrc| file: >
-
-        map <Leader>ZZ <Plug>PerfitysMakeQFTaller
-<
-
-                                                *perfitys_qfheightstep*
-                                                *g:perfitys_qfheightstep*
-By default, the height of the quickfix window changes by steps of three lines.
-You can force the step to a different value (say 6) by adding the following
-line in your |vimrc| file: >
-        let g:perfitys_qfheightstep = 6
-
-<
-
-----------------------------------------------
-5.2. Running the current file                   *perfitys-run-current-file*
+5.1. Running the current file                   *perfitys-run-current-file*
 
                                                         *:RunWithArgs*
 Perfitys provides a function to run the currently edited file with user
@@ -567,7 +507,7 @@ sh
 
 
 ----------------------------------------------
-5.3. Compiling Ada sources                      *perfitys-compile-ada-file*
+5.2. Compiling Ada sources                      *perfitys-compile-ada-file*
 
                                         *perfitys-compile-current-ada-file*
 Perfitys provides functions to apply various gprbuild commands if the current
@@ -604,7 +544,7 @@ file.
 
 
 ----------------------------------------------
-5.4. Issuing a "make" command                   *perfitys-compile-ada-file*
+5.3. Issuing a "make" command                   *perfitys-compile-ada-file*
 
 Perfitys provides a function to issue a make command. It is currently
 applicable to the "ada" and "rst" file types and is exclusive of the function
