@@ -556,6 +556,11 @@ Note that the function may be used to issue any command. When prompted for
 arguments to the make command, just erase "make" and type the command you want
 to issue.
 
+Note also that you can refer to the name of currently edited file in the
+command with "%:p". You can also refer to files in other buffers and apply
+file name modifiers (e.g. to keep only the base name of the file). See
+|cmdline-special| and |filename-modifiers| for more details.
+
 ==============================================================================
 6. Automatic typing                             *perfitys-automatic-typing*
 

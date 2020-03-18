@@ -542,6 +542,10 @@ Note that the function may be used to issue any command. When prompted for
 arguments to the make command, just erase "make" and type the command you want
 to issue.
 
+Note also that you can refer to the name of currently edited file in the
+command with "%:p". Please read the help for "cmdline-special" and
+"filename-modifiers" in Vim for more details.
+
 ==============================================================================
 6. Automatic typing
 
