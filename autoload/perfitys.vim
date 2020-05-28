@@ -852,7 +852,7 @@ function {s:script}#CompileFile()
         endtry
         call {s:plugin}UpdateMenusEnableState()
     else
-        call s:Warning("Applicable to files of type " . &filetype
+        call s:Warning("Applicable to files of type ada"
                     \ . " (except .gpr files)")
     endif
 endfunction
@@ -875,7 +875,7 @@ function {s:script}#CompileAll()
         endtry
         call {s:plugin}UpdateMenusEnableState()
     else
-        call s:Warning("Applicable to files of type " . &filetype
+        call s:Warning("Applicable to files of type ada"
                     \ . " (except .gpr files)")
     endif
 endfunction
