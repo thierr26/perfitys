@@ -4,7 +4,7 @@
 "
 " License: Unlicense. Please refer to the LICENSE file.
 
-" Store the value of cpoptions (abbreviated has cpo).
+" Store the value of cpoptions.
 let s:save_cpo = &cpo
 
 " Set cpoptions to its Vim default.

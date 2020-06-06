@@ -43,7 +43,7 @@ if !exists("g:" . s:main_script . "_" . &filetype . s:nodid)
     let b:did_ftplugin = 1
 endif
 
-" Store the value of cpoptions (abbreviated has cpo).
+" Store the value of cpoptions.
 let s:save_cpo = &cpo
 
 " Set cpoptions to its Vim default.
